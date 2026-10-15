@@ -1,0 +1,58 @@
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Android / Gradle build outputs & caches
+.gradle/
+build/
+*/build/
+local.properties
+*.keystore
+*.jks
+
+# Firebase cache & debug
+.firebase/
+firebase-debug.log*
+
+# IDE & Editor
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# --- Secrets & credentials (never commit) ---
+.env
+.env.*
+!.env.example
+google-services.json
+GoogleService-Info.plist
+*serviceAccount*.json
+*firebase-adminsdk*.json
+service-account*.json
+*.pem
+*.p12
+*.keystore
+*.jks
+keystore.properties
+local.properties
+secrets.properties
+
+# --- Build outputs & caches ---
+*.apk
+*.aab
+.gradle/
+.kotlin/
+build/
+**/build/
+dist/
+node_modules/
+.firebase/
+.dataconnect
+
+# Stray local files
+build_log.txt
+app[0-9]*i[0-9]*/
+*.olf

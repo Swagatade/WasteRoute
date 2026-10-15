@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WesteRoute — Smart Waste Management (Liquid Glass Lens Preview)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top Bar Controls for Previewing -->
+  <header class="preview-toolbar">
+    <div class="toolbar-brand">
+      <img src="logo.png" alt="WesteRoute" class="toolbar-logo">
+      <span>WesteRoute Liquid Glass Preview</span>
+    </div>
+    <div class="toolbar-actions">
+      <div class="device-switcher">
+        <button class="device-btn active" id="btn-phone" title="Phone View">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+          <span>Mobile (390px)</span>
+        </button>
+        <button class="device-btn" id="btn-tablet" title="Tablet View">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span>Tablet (768px)</span>
+        </button>
+      </div>
+      <button class="theme-toggle-btn" id="global-theme-toggle" title="Toggle Theme (Dark / Light)">
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="preview-stage">
+    <!-- Android Device Frame Container -->
+    <div class="device-frame" id="device-container">
+      <div class="android-status-bar">
+        <span class="status-time" id="status-time">9:41</span>
+        <div class="status-icons">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+        </div>
+      </div>
+
+      <!-- App Background Illustration Layer -->
+      <div class="app-background-art" id="app-background-art"></div>
+
+      <!-- App Navigation Viewport -->
+      <div class="app-viewport" id="app-viewport">
+
+        <!-- ==============================================
+             SCREEN 1: ROLE SELECTION SCREEN
+             ============================================== -->
+        <section class="screen active" id="screen-role-selection">
+          <div class="screen-scrollable">
+            <div class="header-section">
+              <!-- Logo Container with Liquid Glow -->
+              <div class="logo-wrapper">
+                <div class="logo-glow"></div>
+                <div class="logo-container">
+                  <img src="logo.png" alt="WesteRoute Tree Logo" class="brand-logo-img">
+                </div>
+              </div>
+
+              <h1 class="brand-title">WesteRoute</h1>
+              <div class="subtitle-badge">
+                <span>Smart Waste Management</span>
+              </div>
+
+              <h2 class="role-heading">Choose how you want to continue</h2>
+              <p class="role-subheading">Select your role to continue to WesteRoute.</p>
+            </div>
+
+            <!-- Role Selection Cards Container -->
+            <div class="role-cards-container">
+              <!-- Citizen Role Card -->
+              <div class="role-card" id="card-citizen" role="button" tabindex="0">
+                <div class="liquid-shimmer"></div>
+                <div class="glass-specular-top"></div>
+                <div class="glass-meniscus-bottom"></div>
+                <div class="role-card-header">
+                  <div class="role-icon-box citizen-icon-box">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  </div>
+                  <span class="role-pill">Community & Cleanliness</span>
+                </div>
+                <h3 class="role-title">Citizen</h3>
+                <p class="role-desc">Report city cleanliness issues, track complaints and stay connected with your local services.</p>
+                <div class="role-action-row citizen-action">
+                  <span>Continue as Citizen</span>
+                  <svg class="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+              </div>
+
+              <!-- Worker Role Card -->
+              <div class="role-card" id="card-worker" role="button" tabindex="0">
+                <div class="liquid-shimmer"></div>
+                <div class="glass-specular-top"></div>
+                <div class="glass-meniscus-bottom"></div>
+                <div class="role-card-header">
+                  <div class="role-icon-box worker-icon-box">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+                  </div>
+                  <span class="role-pill">Field Operations & Routing</span>
+                </div>
+                <h3 class="role-title">Worker</h3>
+                <p class="role-desc">Access assigned collection tasks, routes and daily work updates.</p>
+                <div class="role-action-row worker-action">
+                  <span>Continue as Worker</span>
+                  <svg class="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==============================================
+             SCREEN 2: CITIZEN LOGIN SCREEN
+             ============================================== -->
+        <section class="screen" id="screen-citizen-login">
+          <div class="screen-top-bar">
+            <button type="button" class="back-btn" id="btn-back-citizen" onclick="window.westeRouteGoBack(event)" aria-label="Back to role selection">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
+            <div></div>
+          </div>
+
+          <div class="screen-scrollable">
+            <div class="glass-login-card">
+              <div class="liquid-shimmer"></div>
+              <div class="glass-specular-top"></div>
+              <div class="glass-meniscus-bottom"></div>
+              <!-- Top identity line -->
+              <div class="login-card-header">
+                <div class="mini-logo-container">
+                  <img src="logo.png" alt="WesteRoute Mini Logo" class="mini-logo">
+                </div>
+                <div class="access-badge citizen-badge">
+                  <span>Citizen Access</span>
+                </div>
+              </div>
+
+              <h2 class="login-heading">Citizen Login</h2>
+              <p class="login-subheading">Sign in with Google or your email & password.</p>
+
+              <!-- Quick Demo Autofill chip -->
+              <div style="display:flex; justify-content:center; margin: 10px 0 16px 0;">
+                <button type="button" id="btn-demo-autofill-citizen" class="quick-chip-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                  <span>Quick Demo Autofill</span>
+                </button>
+              </div>
+
+              <!-- Auth Error Banner -->
+              <div id="citizen-auth-error" class="auth-error-box" style="display:none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <span id="citizen-error-text">Please enter a valid email address.</span>
+              </div>
+
+              <!-- SECTION 1: GOOGLE AUTHENTICATION -->
+              <div class="social-buttons-stack" style="margin-bottom: 18px;">
+                <button type="button" class="social-button" id="btn-google-citizen">
+                  <svg width="18" height="18" viewBox="0 0 24 24">
+                    <path fill="#EA4335" d="M12 5c1.5 0 2.9.5 4 1.5l3-3C17.2 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+                    <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                    <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.1-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12.5s.7 2.8 1.9 5.2l3.7-2.9z"/>
+                    <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16c1.8 3.7 5.6 7 10.1 7z"/>
+                  </svg>
+                  <span id="google-citizen-btn-text">Continue with Google</span>
+                </button>
+              </div>
+
+              <!-- Social Divider -->
+              <div class="social-divider" style="margin: 0 0 18px 0;">
+                <span>or sign in with email</span>
+              </div>
+
+              <!-- SECTION 2: EMAIL & PASSWORD AUTHENTICATION -->
+              <form class="login-form" id="citizen-form" onsubmit="event.preventDefault()">
+                <!-- Field 1: Email Address -->
+                <div class="input-group">
+                  <div class="input-field-wrapper" id="wrapper-citizen-email">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </span>
+                    <input type="email" id="citizen-identifier" class="glass-input" placeholder="Enter your email address" required autocomplete="email">
+                  </div>
+                  <span class="field-error-msg" id="citizen-email-error" style="display:none;"></span>
+                </div>
+
+                <!-- Field 2: Password -->
+                <div class="input-group">
+                  <div class="input-field-wrapper" id="wrapper-citizen-pwd">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
+                    <input type="password" id="citizen-password" class="glass-input" placeholder="Enter your password" required autocomplete="current-password">
+                    <button type="button" class="password-toggle-btn" id="toggle-citizen-pwd" aria-label="Toggle password visibility">
+                      <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </button>
+                  </div>
+                  <span class="field-error-msg" id="citizen-pwd-error" style="display:none;"></span>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="options-row">
+                  <label class="custom-checkbox">
+                    <input type="checkbox" id="citizen-remember" checked>
+                    <span class="checkbox-box">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </span>
+                    <span class="checkbox-label">Remember me</span>
+                  </label>
+                  <a href="#" class="forgot-link" id="link-forgot-citizen" onclick="window.westeRouteShowForgotPassword('citizen', event)">Forgot password?</a>
+                </div>
+
+                <!-- Primary Sign In Button -->
+                <button type="submit" class="primary-button citizen-btn" id="btn-submit-citizen">
+                  <span>Sign in with Email</span>
+                </button>
+
+                <!-- Create Account Link -->
+                <div class="auth-footer-prompt">
+                  <span>Don't have an account?</span>
+                  <a href="#" class="create-account-link" id="btn-goto-citizen-register" onclick="window.westeRouteShowCitizenRegister(event)">Create account</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==============================================
+             SCREEN 2B: CITIZEN CREATE ACCOUNT SCREEN
+             ============================================== -->
+        <section class="screen" id="screen-citizen-register">
+          <div class="screen-top-bar">
+            <button type="button" class="back-btn" id="btn-back-citizen-register" onclick="window.westeRouteShowCitizen(event)" aria-label="Back to citizen login">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
+            <div></div>
+          </div>
+
+          <div class="screen-scrollable">
+            <div class="glass-login-card">
+              <div class="liquid-shimmer"></div>
+              <div class="glass-specular-top"></div>
+              <div class="glass-meniscus-bottom"></div>
+              <!-- Top identity line -->
+              <div class="login-card-header">
+                <div class="mini-logo-container">
+                  <img src="logo.png" alt="WesteRoute Mini Logo" class="mini-logo">
+                </div>
+                <div class="access-badge citizen-badge">
+                  <span>Citizen Registration</span>
+                </div>
+              </div>
+
+              <h2 class="login-heading">Create Account</h2>
+              <p class="login-subheading">Join WesteRoute to keep your city clean.</p>
+
+              <form class="login-form" id="citizen-register-form" onsubmit="event.preventDefault()">
+                <!-- Field 1: Full Name -->
+                <div class="input-group">
+                  <div class="input-field-wrapper">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </span>
+                    <input type="text" id="citizen-reg-name" class="glass-input" placeholder="Full name" required>
+                  </div>
+                </div>
+
+                <!-- Field 2: Email Address -->
+                <div class="input-group">
+                  <div class="input-field-wrapper">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </span>
+                    <input type="email" id="citizen-reg-email" class="glass-input" placeholder="Email address" required>
+                  </div>
+                </div>
+
+                <!-- Field 3: Mobile Number -->
+                <div class="input-group">
+                  <div class="input-field-wrapper">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </span>
+                    <input type="tel" id="citizen-reg-phone" class="glass-input" placeholder="Mobile number" required>
+                  </div>
+                </div>
+
+                <!-- Field 4: Password -->
+                <div class="input-group">
+                  <div class="input-field-wrapper">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
+                    <input type="password" id="citizen-reg-password" class="glass-input" placeholder="Create password" required>
+                    <button type="button" class="password-toggle-btn" id="toggle-citizen-reg-pwd" aria-label="Toggle password visibility">
+                      <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Field 4: Confirm Password -->
+                <div class="input-group">
+                  <div class="input-field-wrapper">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
+                    <input type="password" id="citizen-reg-confirm-password" class="glass-input" placeholder="Confirm password" required>
+                    <button type="button" class="password-toggle-btn" id="toggle-citizen-reg-confirm-pwd" aria-label="Toggle confirm password visibility">
+                      <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Terms & Conditions Agreement -->
+                <div class="options-row terms-row">
+                  <label class="custom-checkbox">
+                    <input type="checkbox" id="citizen-reg-terms" checked required>
+                    <span class="checkbox-box">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </span>
+                    <span class="checkbox-label">I agree to the <a href="#" class="terms-link" onclick="event.preventDefault()">Terms & Conditions</a></span>
+                  </label>
+                </div>
+
+                <!-- Primary Create Account Button -->
+                <button type="submit" class="primary-button citizen-btn" id="btn-submit-citizen-register">
+                  <span>Create Account</span>
+                </button>
+
+                <!-- Already have account Link -->
+                <div class="auth-footer-prompt">
+                  <span>Already have an account?</span>
+                  <a href="#" class="create-account-link" id="btn-goto-citizen-login" onclick="window.westeRouteShowCitizen(event)">Sign in</a>
+                </div>
+
+                <!-- Social Divider -->
+                <div class="social-divider">
+                  <span>or</span>
+                </div>
+
+                <!-- Social Auth Buttons -->
+                <div class="social-buttons-stack">
+                  <button type="button" class="social-button" id="btn-google-citizen-reg">
+                    <svg width="18" height="18" viewBox="0 0 24 24">
+                      <path fill="#EA4335" d="M12 5c1.5 0 2.9.5 4 1.5l3-3C17.2 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+                      <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                      <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.1-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12.5s.7 2.8 1.9 5.2l3.7-2.9z"/>
+                      <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16c1.8 3.7 5.6 7 10.1 7z"/>
+                    </svg>
+                    <span>Sign up with Google</span>
+                  </button>
+
+                  <button type="button" class="social-button" id="btn-github-citizen-reg">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+                    </svg>
+                    <span>Sign up with GitHub</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==============================================
+             SCREEN 2: WORKER LOGIN SCREEN
+             ============================================== -->
+        <section class="screen" id="screen-worker-login">
+          <div class="screen-top-bar">
+            <button type="button" class="back-btn" id="btn-back-worker" onclick="window.westeRouteGoBack(event)" aria-label="Back to role selection">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
+            <div></div>
+          </div>
+
+          <div class="screen-scrollable">
+            <div class="glass-login-card">
+              <div class="liquid-shimmer"></div>
+              <div class="glass-specular-top"></div>
+              <div class="glass-meniscus-bottom"></div>
+              <!-- Top identity line -->
+              <div class="login-card-header">
+                <div class="mini-logo-container">
+                  <img src="logo.png" alt="WesteRoute Mini Logo" class="mini-logo">
+                </div>
+                <div class="access-badge worker-badge">
+                  <span>Worker Access</span>
+                </div>
+              </div>
+
+              <h2 class="login-heading">Welcome back</h2>
+              <p class="login-subheading">Sign in to access your assigned work.</p>
+
+              <form class="login-form" id="worker-form" onsubmit="event.preventDefault()">
+                <!-- Field 1: Worker ID -->
+                <div class="input-group">
+                  <div class="input-field-wrapper">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><line x1="15" y1="8" x2="17" y2="8"></line><line x1="15" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="17" y2="16"></line></svg>
+                    </span>
+                    <input type="text" id="worker-id" class="glass-input" placeholder="Enter your worker ID" required>
+                  </div>
+                </div>
+
+                <!-- Field 2: Mobile Number or Email -->
+                <div class="input-group">
+                  <div class="input-field-wrapper">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    </span>
+                    <input type="text" id="worker-contact" class="glass-input" placeholder="Enter registered mobile or email" required>
+                  </div>
+                </div>
+
+                <!-- Field 3: Password -->
+                <div class="input-group">
+                  <div class="input-field-wrapper">
+                    <span class="input-leading-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
+                    <input type="password" id="worker-password" class="glass-input" placeholder="Enter your password" required>
+                    <button type="button" class="password-toggle-btn" id="toggle-worker-pwd" aria-label="Toggle password visibility">
+                      <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Remember Me & Forgot Password -->
+                <div class="options-row">
+                  <label class="custom-checkbox">
+                    <input type="checkbox" id="worker-remember" checked>
+                    <span class="checkbox-box">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </span>
+                    <span class="checkbox-label">Remember me</span>
+                  </label>
+                  <a href="#" class="forgot-link" id="link-forgot-worker" onclick="window.westeRouteShowForgotPassword('worker', event)">Forgot password?</a>
+                </div>
+
+                <!-- Primary Sign In Button -->
+                <button type="submit" class="primary-button worker-btn" id="btn-submit-worker">
+                  <span>Sign in</span>
+                </button>
+
+                <!-- Personnel Badge Notice -->
+                <div class="authorized-notice">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  <span>Authorized WesteRoute personnel access</span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             SCREEN 4: Forgot Password Recovery Flow
+             ========================================== -->
+        <section id="screen-forgot-password" class="screen" aria-label="Forgot Password Recovery Screen">
+          <!-- Top Bar with Dedicated Back Button -->
+          <div class="top-nav-bar">
+            <button type="button" class="back-btn" id="btn-back-forgot" aria-label="Navigate back" onclick="window.westeRouteForgotGoBack(event)">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <div class="screen-scrollable">
+            <div class="auth-card-container">
+              <div class="glass-card auth-card" id="forgot-password-card">
+                
+                <!-- Card Header -->
+                <div class="card-header-badge-row">
+                  <div class="mini-logo">
+                    <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+                      <circle cx="24" cy="24" r="22" stroke="url(#mini-logo-grad)" stroke-width="3" fill="none" stroke-dasharray="138" stroke-dashoffset="30"/>
+                      <path d="M14 20C14 20 18 13 24 13C30 13 34 20 34 20" stroke="url(#mini-logo-grad)" stroke-width="3" stroke-linecap="round"/>
+                      <path d="M34 28C34 28 30 35 24 35C18 35 14 28 14 28" stroke="url(#mini-logo-grad)" stroke-width="3" stroke-linecap="round"/>
+                      <circle cx="24" cy="24" r="4.5" fill="url(#mini-logo-grad)"/>
+                    </svg>
+                  </div>
+                  <span class="role-badge citizen-badge" id="forgot-role-badge">Citizen Password Recovery</span>
+                </div>
+
+                <!-- Progress Step Bar -->
+                <div class="recovery-stepper" id="recovery-stepper">
+                  <div class="step-bar active" id="step-bar-1"></div>
+                  <div class="step-bar" id="step-bar-2"></div>
+                  <div class="step-bar" id="step-bar-3"></div>
+                </div>
+
+                <!-- STEP 1: Email Request -->
+                <div class="recovery-step-container active" id="recovery-step-1">
+                  <h2 class="auth-heading">Forgot Password?</h2>
+                  <p class="auth-subheading">Enter your registered email address to receive a secure password reset code.</p>
+
+                  <form id="form-forgot-step1" onsubmit="window.westeRouteHandleForgotStep1(event)">
+                    <div class="input-group">
+                      <div class="input-field-wrapper">
+                        <span class="input-leading-icon">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        </span>
+                        <input type="email" id="forgot-email" class="glass-input" placeholder="Enter registered email" required autocomplete="email">
+                      </div>
+                      <span class="input-error-msg" id="forgot-email-error"></span>
+                    </div>
+
+                    <button type="submit" class="primary-button citizen-btn" id="btn-forgot-send-code">
+                      <span>Send Verification Code</span>
+                    </button>
+
+                    <div class="auth-footer-prompt">
+                      <a href="#" class="forgot-back-link" onclick="window.westeRouteForgotGoBack(event)">Back to Sign In</a>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- STEP 2: OTP Verification -->
+                <div class="recovery-step-container" id="recovery-step-2">
+                  <div class="recovery-icon-badge">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                      <polyline points="16 19 19 22 24 17"></polyline>
+                    </svg>
+                  </div>
+                  <h2 class="auth-heading">Verify Email</h2>
+                  <p class="auth-subheading">We sent a 6-digit code to:<br><strong id="forgot-display-email" style="color: var(--primary-accent);">user@example.com</strong></p>
+
+                  <form id="form-forgot-step2" onsubmit="window.westeRouteHandleForgotStep2(event)">
+                    <div class="otp-inputs-grid" id="otp-grid">
+                      <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-digit" id="otp-1" autofocus>
+                      <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-digit" id="otp-2">
+                      <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-digit" id="otp-3">
+                      <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-digit" id="otp-4">
+                      <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-digit" id="otp-5">
+                      <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]*" class="otp-digit" id="otp-6">
+                    </div>
+                    <span class="input-error-msg" id="forgot-otp-error" style="text-align: center; display: block; margin-top: 6px;"></span>
+
+                    <div class="otp-timer-row" id="otp-timer-row">
+                      <span id="otp-timer-text">Resend code in <strong id="otp-countdown">0:45</strong></span>
+                      <a href="#" id="link-resend-otp" class="resend-link hidden" onclick="window.westeRouteResendOtp(event)">Resend Code</a>
+                    </div>
+
+                    <button type="submit" class="primary-button citizen-btn" id="btn-forgot-verify-code">
+                      <span>Verify Code</span>
+                    </button>
+
+                    <div class="auth-footer-prompt">
+                      <a href="#" class="forgot-back-link" onclick="window.westeRouteForgotSetStep(1, event)">Change email address</a>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- STEP 3: Reset Password -->
+                <div class="recovery-step-container" id="recovery-step-3">
+                  <h2 class="auth-heading">Set New Password</h2>
+                  <p class="auth-subheading">Create a strong new password for your WesteRoute account.</p>
+
+                  <form id="form-forgot-step3" onsubmit="window.westeRouteHandleForgotStep3(event)">
+                    <div class="input-group">
+                      <div class="input-field-wrapper">
+                        <span class="input-leading-icon">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </span>
+                        <input type="password" id="forgot-new-pwd" class="glass-input" placeholder="Enter new password" required oninput="window.westeRouteCheckPwdStrength(this.value)">
+                        <button type="button" class="password-toggle-btn" id="toggle-forgot-new-pwd" aria-label="Toggle password visibility">
+                          <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                          <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                        </button>
+                      </div>
+
+                      <!-- Password Strength Meter -->
+                      <div class="pwd-strength-container hidden" id="forgot-strength-container">
+                        <div class="pwd-strength-labels">
+                          <span>Password strength:</span>
+                          <span id="forgot-strength-label" style="font-weight: 700;">Weak</span>
+                        </div>
+                        <div class="pwd-strength-bar-bg">
+                          <div class="pwd-strength-bar-fill" id="forgot-strength-fill"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="input-group">
+                      <div class="input-field-wrapper">
+                        <span class="input-leading-icon">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </span>
+                        <input type="password" id="forgot-confirm-pwd" class="glass-input" placeholder="Confirm new password" required>
+                        <button type="button" class="password-toggle-btn" id="toggle-forgot-confirm-pwd" aria-label="Toggle password visibility">
+                          <svg class="eye-open" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                          <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                        </button>
+                      </div>
+                      <span class="input-error-msg" id="forgot-pwd-error"></span>
+                    </div>
+
+                    <button type="submit" class="primary-button citizen-btn" id="btn-forgot-reset-pwd">
+                      <span>Reset Password</span>
+                    </button>
+                  </form>
+                </div>
+
+                <!-- STEP 4: Success Screen -->
+                <div class="recovery-step-container" id="recovery-step-4">
+                  <div class="success-glow-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+
+                  <h2 class="auth-heading" style="font-size: 22px;">Password Reset Complete!</h2>
+                  <p class="auth-subheading">Your password has been updated securely. You can now sign in to your WesteRoute account with your new credentials.</p>
+
+                  <button type="button" class="primary-button citizen-btn" id="btn-forgot-success-signin" onclick="window.westeRouteForgotGoBack(event)">
+                    <span>Sign In Now</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             SCREEN 5: MASTER CITIZEN DASHBOARD (Smart City & Environmental UI)
+             =================================================================== -->
+        <section class="screen" id="screen-citizen-dashboard">
+          <div class="dashboard-scrollable">
+            <!-- 1. Immersive Smart Header -->
+            <header class="citizen-smart-header">
+              <div class="header-user-info">
+                <span class="header-greeting">Good Evening 👋</span>
+                <h1 class="header-username">Swagata</h1>
+                <div class="header-tags-row">
+                  <span class="location-pill">📍 SRM KTR, Kattankulathur</span>
+                </div>
+              </div>
+
+              <div class="header-actions">
+                <button type="button" class="frosted-notif-btn" id="btn-citizen-notif" aria-label="Notifications">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                  </svg>
+                  <span class="coral-notif-dot"></span>
+                </button>
+
+                <div class="profile-avatar-ring" id="btn-citizen-profile">
+                  <div class="avatar-inner">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            <!-- 2. City Cleanliness Hero Section -->
+            <div class="dashboard-section hero-section-container">
+              <div class="cleanliness-hero-card glass-card-primary">
+                <!-- Abstract Map Lines Background -->
+                <svg class="abstract-map-bg" viewBox="0 0 400 240" fill="none" preserveAspectRatio="none">
+                  <path d="M-20 60 C 80 10, 200 140, 420 80" stroke="rgba(52, 211, 153, 0.12)" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M-20 160 C 120 200, 280 60, 420 180" stroke="rgba(52, 211, 153, 0.1)" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="60" cy="50" r="5" fill="rgba(56, 189, 248, 0.2)"/>
+                  <circle cx="340" cy="80" r="4" fill="rgba(56, 189, 248, 0.2)"/>
+                  <circle cx="300" cy="180" r="6" fill="rgba(56, 189, 248, 0.2)"/>
+                </svg>
+
+                <div class="hero-card-header">
+                  <span class="hero-tag">YOUR NEIGHBORHOOD</span>
+                  <p class="hero-subtitle">Cleaner today than yesterday</p>
+                </div>
+
+                <!-- Circular Gauge -->
+                <div class="circular-gauge-container">
+                  <div class="gauge-svg-wrap">
+                    <svg class="gauge-svg" viewBox="0 0 160 160">
+                      <!-- Background Track (270 deg) -->
+                      <circle class="gauge-track" cx="80" cy="80" r="62" fill="none" stroke-width="12" stroke-dasharray="292.16 389.55" stroke-dashoffset="0" stroke-linecap="round"/>
+                      <!-- Progress Arc (82%) -->
+                      <circle class="gauge-progress" cx="80" cy="80" r="62" fill="none" stroke-width="12" stroke-dasharray="239.57 389.55" stroke-dashoffset="0" stroke-linecap="round"/>
+                    </svg>
+                    <div class="gauge-inner-content">
+                      <span class="gauge-score">82%</span>
+                      <span class="gauge-label">Cleanliness Score</span>
+                      <span class="gauge-trend-pill">↑ 6% this week</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Surrounding Info Chips -->
+                <div class="hero-info-chips">
+                  <div class="hero-chip">
+                    <span class="chip-num text-emerald">8</span>
+                    <span class="chip-text">Resolved</span>
+                  </div>
+                  <div class="hero-chip">
+                    <span class="chip-num text-cyan">2</span>
+                    <span class="chip-text">Active</span>
+                  </div>
+                  <div class="hero-chip">
+                    <span class="chip-num text-purple">12</span>
+                    <span class="chip-text">Nearby Bins</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Floating Report Waste Action -->
+            <div class="dashboard-section floating-report-wrapper">
+              <div class="floating-report-card" id="btn-floating-report" onclick="window.westeRouteTriggerReport(event)">
+                <div class="report-card-top">
+                  <div class="report-camera-box">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                      <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                  </div>
+
+                  <div class="report-card-text">
+                    <h3>Report Waste</h3>
+                    <p>Spot garbage? Help us clean it faster.</p>
+                  </div>
+
+                  <div class="report-arrow-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- 3-Step Preview -->
+                <div class="report-steps-preview">
+                  <div class="step-preview-item">
+                    <span>📷</span>
+                    <span>Photo</span>
+                  </div>
+                  <div class="step-preview-line line-emerald"></div>
+                  <div class="step-preview-item">
+                    <span>📍</span>
+                    <span>GPS</span>
+                  </div>
+                  <div class="step-preview-line line-cyan"></div>
+                  <div class="step-preview-item">
+                    <span>🚀</span>
+                    <span>Submit</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Active Live Complaint Journey -->
+            <div class="dashboard-section">
+              <div class="section-title-row">
+                <span class="section-heading">LIVE COMPLAINT</span>
+                <span class="status-pulse-badge">● IN PROGRESS</span>
+              </div>
+
+              <div class="complaint-journey-card glass-card-primary">
+                <div class="complaint-header-row">
+                  <div class="complaint-thumb-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </div>
+
+                  <div class="complaint-info-col">
+                    <div class="complaint-title-row">
+                      <h4>Roadside Garbage</h4>
+                      <span class="complaint-id">#WR-2048</span>
+                    </div>
+                    <span class="complaint-location">📍 Tech Park, SRM KTR</span>
+                    <div class="complaint-meta-row">
+                      <div class="ai-verified-pill" id="ai-badge-trigger" onclick="window.westeRouteToggleAiTooltip(event)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"></path></svg>
+                        <span>AI Verified</span>
+                      </div>
+                      <span class="complaint-time">Today, 4:15 PM</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- YOLOv8 Tooltip -->
+                <div class="ai-tooltip-box hidden" id="ai-tooltip-content">
+                  <span>Waste image successfully verified with YOLOv8 neural model.</span>
+                </div>
+
+                <!-- Vertical Journey Timeline -->
+                <div class="journey-timeline">
+                  <div class="journey-node completed">
+                    <div class="node-icon-circle">✓</div>
+                    <div class="node-content">
+                      <span class="node-title">Reported</span>
+                      <span class="node-time">4:15 PM</span>
+                    </div>
+                  </div>
+                  <div class="journey-line completed"></div>
+
+                  <div class="journey-node completed">
+                    <div class="node-icon-circle">✓</div>
+                    <div class="node-content">
+                      <span class="node-title">AI Verified</span>
+                      <span class="node-time">4:16 PM</span>
+                    </div>
+                  </div>
+                  <div class="journey-line completed"></div>
+
+                  <div class="journey-node completed">
+                    <div class="node-icon-circle">✓</div>
+                    <div class="node-content">
+                      <span class="node-title">Worker Assigned</span>
+                      <span class="node-time">4:20 PM</span>
+                    </div>
+                  </div>
+                  <div class="journey-line in-progress"></div>
+
+                  <div class="journey-node in-progress">
+                    <div class="node-pulse-circle">
+                      <span class="pulse-aura"></span>
+                      <span class="pulse-dot"></span>
+                    </div>
+                    <div class="node-content">
+                      <span class="node-title text-cyan font-bold">Cleaning in Progress</span>
+                      <span class="node-time text-cyan">Live</span>
+                    </div>
+                  </div>
+                  <div class="journey-line pending"></div>
+
+                  <div class="journey-node pending">
+                    <div class="node-empty-circle"></div>
+                    <div class="node-content">
+                      <span class="node-title text-muted">Completed</span>
+                      <span class="node-time text-muted">Est. 5:00 PM</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Assigned Worker Footer -->
+                <div class="assigned-worker-row">
+                  <div class="worker-avatar-box">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                    </svg>
+                  </div>
+                  <div class="worker-details">
+                    <span class="worker-name">Assigned: Cleaning Team 07</span>
+                    <span class="worker-eta">Estimated update in 18 min</span>
+                  </div>
+                </div>
+
+                <div class="live-status-action">
+                  <a href="#" class="view-live-link">View Live Status →</a>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Smart Quick Actions (Asymmetric Bento Grid) -->
+            <div class="dashboard-section">
+              <span class="section-heading">SMART ACTIONS</span>
+              <div class="bento-grid-container">
+                <!-- Bento Card 1: My Complaints -->
+                <div class="bento-card bento-span-2 bento-blue" onclick="window.westeRouteShowComplaintsModal()">
+                  <div class="bento-icon-box bg-blue">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                  </div>
+                  <div class="bento-text-col">
+                    <h4>My Complaints</h4>
+                    <p>12 total · 2 active in progress</p>
+                  </div>
+                  <span class="bento-arrow">→</span>
+                </div>
+
+                <!-- Bento Card 2: Nearby Bins -->
+                <div class="bento-card bento-teal" onclick="window.westeRouteFocusMap()">
+                  <div class="bento-icon-box bg-teal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  </div>
+                  <h4>Nearby Bins</h4>
+                  <p>12 around you</p>
+                </div>
+
+                <!-- Bento Card 3: Scan QR -->
+                <div class="bento-card bento-purple" onclick="window.westeRouteOpenQrScanner()">
+                  <div class="bento-icon-box bg-purple">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  </div>
+                  <h4>Scan QR</h4>
+                  <p>Verify pickup</p>
+                </div>
+
+                <!-- Bento Card 4: City Updates -->
+                <div class="bento-card bento-span-2 bento-orange">
+                  <div class="bento-icon-box bg-orange">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                  </div>
+                  <div class="bento-text-col">
+                    <h4>Campus & Ward Updates</h4>
+                    <p>3 new updates in SRM KTR Green Ward 04</p>
+                  </div>
+                  <span class="bento-arrow">→</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. Nearby Waste Bin Map Card Preview -->
+            <div class="dashboard-section" id="section-map-preview">
+              <span class="section-heading">NEARBY WASTE INFRASTRUCTURE</span>
+              <div class="map-preview-card">
+                <!-- SVG Fake Map -->
+                <div class="fake-map-canvas">
+                  <svg width="100%" height="100%" viewBox="0 0 360 220" preserveAspectRatio="none">
+                    <!-- Road grids -->
+                    <rect x="0" y="0" width="360" height="220" fill="var(--map-bg)"/>
+                    <rect x="20" y="20" width="100" height="70" rx="10" fill="var(--map-block)"/>
+                    <rect x="20" y="120" width="80" height="80" rx="10" fill="var(--map-block)"/>
+                    <rect x="220" y="20" width="120" height="60" rx="10" fill="var(--map-block)"/>
+                    <rect x="190" y="110" width="150" height="90" rx="10" fill="var(--map-block)"/>
+                    <rect x="130" y="20" width="70" height="70" rx="14" fill="rgba(16, 185, 129, 0.15)"/>
+                    <!-- Road strokes -->
+                    <line x1="0" y1="105" x2="360" y2="105" stroke="var(--map-road)" stroke-width="16" stroke-linecap="round"/>
+                    <line x1="160" y1="0" x2="160" y2="220" stroke="var(--map-road)" stroke-width="14" stroke-linecap="round"/>
+                    <!-- User Radar Pulse Center -->
+                    <circle cx="160" cy="105" r="18" fill="rgba(56, 189, 248, 0.25)" class="radar-pulse-anim"/>
+                    <circle cx="160" cy="105" r="7" fill="#0284c7"/>
+                    <circle cx="160" cy="105" r="3" fill="#ffffff"/>
+                  </svg>
+
+                  <!-- Interactive Bin Markers -->
+                  <div class="map-marker-pin marker-green" style="top: 30%; left: 18%;" onclick="window.westeRouteSelectBin('UB Building Hub', '250 m', 'Available', '#10b981')">
+                    <span class="marker-dot"></span>
+                    <span>🗑 250 m</span>
+                  </div>
+
+                  <div class="map-marker-pin marker-amber active" style="top: 42%; left: 68%;" onclick="window.westeRouteSelectBin('Tech Park Station', '420 m', 'Nearly Full', '#f59e0b')">
+                    <span class="marker-dot"></span>
+                    <span>🗑 420 m</span>
+                  </div>
+
+                  <div class="map-marker-pin marker-red" style="top: 68%; left: 36%;" onclick="window.westeRouteSelectBin('Potheri Gate Hub', '610 m', 'Full', '#ef4444')">
+                    <span class="marker-dot"></span>
+                    <span>🗑 610 m</span>
+                  </div>
+                </div>
+
+                <!-- Top Map Overlay -->
+                <div class="map-overlay-top">
+                  <span class="map-pill-badge">12 public bins active</span>
+                  <button type="button" class="btn-open-map">Open Map</button>
+                </div>
+
+                <!-- Bottom Bin Details Popover -->
+                <div class="bin-detail-popover" id="bin-detail-popover">
+                  <div class="popover-info">
+                    <div class="popover-title-row">
+                      <span class="popover-dot" id="popover-dot"></span>
+                      <h5 id="popover-name">Tech Park Station</h5>
+                    </div>
+                    <span class="popover-sub" id="popover-sub">420 m away · Nearly Full</span>
+                  </div>
+                  <button type="button" class="popover-dir-btn">Directions →</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 7. Household Collection Verification Card -->
+            <div class="dashboard-section">
+              <span class="section-heading text-purple">HOUSEHOLD COLLECTION</span>
+              <div class="collection-verification-card" onclick="window.westeRouteOpenQrScanner()">
+                <div class="collection-top-row">
+                  <span class="collection-badge-pill">Daily Doorstep Pickup</span>
+                  <span class="collection-tag">QR Verified System</span>
+                </div>
+                <h3>Did your waste get collected today?</h3>
+                <p>Scan the worker's QR after collection to confirm doorstep service and maintain verified neighborhood records.</p>
+                <button type="button" class="btn-scan-worker-qr">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  <span>Scan Worker QR</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 8. Environmental Impact Section -->
+            <div class="dashboard-section">
+              <span class="section-heading text-emerald">YOUR IMPACT</span>
+              <div class="impact-metrics-row">
+                <div class="impact-card">
+                  <span class="impact-num text-emerald">08</span>
+                  <span class="impact-title">Resolved</span>
+                  <span class="impact-sub">Reports</span>
+                </div>
+                <div class="impact-card">
+                  <span class="impact-num text-cyan">03</span>
+                  <span class="impact-title">Verified</span>
+                  <span class="impact-sub">Pickups</span>
+                </div>
+                <div class="impact-card">
+                  <span class="impact-num text-purple">24 kg</span>
+                  <span class="impact-title">Waste</span>
+                  <span class="impact-sub">Cleaned</span>
+                </div>
+              </div>
+
+              <div class="civic-banner">
+                <span class="civic-icon">🌱</span>
+                <div class="civic-text">
+                  <h5>Cleaner City Contribution</h5>
+                  <p>You're actively helping improve sanitation in your neighborhood.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 9. Mini City Activity Graph -->
+            <div class="dashboard-section">
+              <div class="section-title-row">
+                <span class="section-heading text-cyan">NEIGHBORHOOD ACTIVITY</span>
+                <span class="chart-subtitle">Resolved this week</span>
+              </div>
+              <div class="activity-chart-card glass-card-primary">
+                <div class="chart-bars-wrap">
+                  <div class="bar-col"><div class="bar-fill" style="height: 35%;"></div><span>M</span></div>
+                  <div class="bar-col"><div class="bar-fill" style="height: 55%;"></div><span>T</span></div>
+                  <div class="bar-col"><div class="bar-fill" style="height: 85%;"></div><span>W</span></div>
+                  <div class="bar-col"><div class="bar-fill" style="height: 70%;"></div><span>T</span></div>
+                  <div class="bar-col"><div class="bar-fill active" style="height: 100%;"></div><span class="font-bold text-cyan">F</span></div>
+                  <div class="bar-col"><div class="bar-fill" style="height: 45%;"></div><span>S</span></div>
+                  <div class="bar-col"><div class="bar-fill" style="height: 90%;"></div><span>S</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 10. Smart Notification Preview -->
+            <div class="dashboard-section">
+              <div class="section-title-row">
+                <span class="section-heading">LATEST NOTICE</span>
+                <a href="#" class="view-all-link">View All</a>
+              </div>
+              <div class="notification-preview-card glass-card-primary">
+                <div class="notif-bell-box">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                </div>
+                <div class="notif-content-col">
+                  <div class="notif-top">
+                    <h5>Collection Update</h5>
+                    <span class="notif-time">2 min ago</span>
+                  </div>
+                  <p>Your complaint #WR-2048 is currently being handled by Cleaning Team 07.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 11. Recent Activity Timeline -->
+            <div class="dashboard-section">
+              <span class="section-heading">RECENT CITIZEN ACTIVITY</span>
+              <div class="recent-timeline-card glass-card-primary">
+                <span class="timeline-day-label">Today</span>
+
+                <div class="timeline-entry">
+                  <div class="timeline-icon bg-cyan">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  </div>
+                  <div class="timeline-entry-content">
+                    <div class="entry-header">
+                      <h6>Complaint Updated</h6>
+                      <span>4:22 PM</span>
+                    </div>
+                    <p>Roadside Garbage · Cleaning in progress</p>
+                  </div>
+                </div>
+
+                <div class="timeline-entry">
+                  <div class="timeline-icon bg-purple">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  </div>
+                  <div class="timeline-entry-content">
+                    <div class="entry-header">
+                      <h6>QR Verified</h6>
+                      <span>8:14 AM</span>
+                    </div>
+                    <p>Household collection confirmed with Team 03</p>
+                  </div>
+                </div>
+
+                <span class="timeline-day-label" style="margin-top: 10px;">Yesterday</span>
+
+                <div class="timeline-entry">
+                  <div class="timeline-icon bg-emerald">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                  </div>
+                  <div class="timeline-entry-content">
+                    <div class="entry-header">
+                      <h6>Complaint Completed</h6>
+                      <span>3:45 PM</span>
+                    </div>
+                    <p>Overflowing Bin · Java Block verified resolved</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="height: 32px;"></div>
+          </div>
+
+          <!-- 12. Floating Bottom Navigation -->
+          <nav class="premium-bottom-nav">
+            <div class="nav-tab active" id="tab-home" onclick="window.westeRouteSelectNavTab('home')">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              <span>Home</span>
+              <div class="nav-indicator"></div>
+            </div>
+
+            <div class="nav-tab" id="tab-complaints" onclick="window.westeRouteSelectNavTab('complaints')">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              <span>Complaints</span>
+              <div class="nav-indicator"></div>
+            </div>
+
+            <!-- Elevated Center Camera REPORT button -->
+            <div class="nav-center-report" onclick="window.westeRouteTriggerReport(event)">
+              <div class="center-report-pill">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              </div>
+            </div>
+
+            <div class="nav-tab" id="tab-map" onclick="window.westeRouteSelectNavTab('map')">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>
+              <span>Map</span>
+              <div class="nav-indicator"></div>
+            </div>
+
+            <div class="nav-tab" id="tab-profile" onclick="window.westeRouteSelectNavTab('profile')">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>Profile</span>
+              <div class="nav-indicator"></div>
+            </div>
+          </nav>
+        </section>
+
+        <!-- ===================================================================
+             SCREEN 6: MASTER WORKER DASHBOARD (Field Operations & Route Mgmt)
+             =================================================================== -->
+        <section class="screen" id="screen-worker-dashboard">
+          <div class="dashboard-scrollable" id="worker-scrollable">
+
+            <!-- Optional Offline Mode Banner -->
+            <div class="offline-banner hidden" id="worker-offline-banner">
+              <div class="offline-banner-content">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path><path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+                <span>Offline Mode: Changes will sync when connection returns.</span>
+              </div>
+              <button type="button" class="btn-close-offline" onclick="window.westeRouteToggleOffline(false)">✕</button>
+            </div>
+
+            <!-- 1. Premium Worker Header -->
+            <header class="worker-smart-header">
+              <div class="header-user-info">
+                <span class="header-greeting">Good Morning 👋</span>
+                <h1 class="header-username">Rahul Kumar</h1>
+                <span class="worker-role-sub">Waste Collection Worker · ID: WR-W-204</span>
+                <div class="header-tags-row" style="margin-top: 6px;">
+                  <button type="button" class="duty-toggle-pill on-duty" id="btn-duty-toggle" onclick="window.westeRouteToggleDuty()">
+                    <span class="duty-dot"></span>
+                    <span id="duty-text">● ON DUTY</span>
+                  </button>
+                  <span class="location-pill worker-loc-pill">📍 SRMIST, Kattankulathur</span>
+                </div>
+              </div>
+
+              <div class="header-actions">
+                <button type="button" class="frosted-notif-btn" id="btn-worker-notif" aria-label="Notifications" onclick="window.westeRouteFocusWorkerNotif()">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                  </svg>
+                  <span class="coral-notif-dot"></span>
+                </button>
+
+                <div class="profile-avatar-ring worker-avatar-ring" id="btn-worker-profile" onclick="window.westeRouteSelectWorkerNav('profile')">
+                  <div class="avatar-inner" style="background: linear-gradient(135deg, #1e3a8a, #0284c7);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            <!-- 2. Today's Shift Card -->
+            <div class="dashboard-section" style="margin-top: 6px;">
+              <span class="section-heading">TODAY'S SHIFT</span>
+              <div class="shift-status-card glass-card-primary">
+                <div class="shift-top-row">
+                  <div class="shift-time-col">
+                    <div class="shift-time-title">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-400)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                      <h4>08:00 AM — 04:00 PM</h4>
+                    </div>
+                    <span class="shift-sub">Standard 8-hour field shift</span>
+                  </div>
+
+                  <button type="button" class="btn-end-shift" onclick="window.westeRouteEndShift()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <span>End Shift</span>
+                  </button>
+                </div>
+
+                <div class="shift-progress-wrap">
+                  <div class="shift-prog-labels">
+                    <span>Shift Completion</span>
+                    <span class="text-cyan font-bold">42% Completed</span>
+                  </div>
+                  <div class="shift-prog-bar-bg">
+                    <div class="shift-prog-bar-fill" style="width: 42%;"></div>
+                  </div>
+                </div>
+
+                <div class="shift-bottom-stats">
+                  <div>
+                    <span class="stat-lbl">Started</span>
+                    <span class="stat-val">08:03 AM</span>
+                  </div>
+                  <div style="text-align: right;">
+                    <span class="stat-lbl">Elapsed Time</span>
+                    <span class="stat-val text-cyan">03h 26m</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Today's Work Summary (4 Stat Cards) -->
+            <div class="dashboard-section">
+              <span class="section-heading">TODAY'S WORK</span>
+              <div class="worker-summary-grid">
+                <div class="worker-stat-box box-blue">
+                  <span class="stat-big-num text-blue">08</span>
+                  <span class="stat-box-lbl">Assigned</span>
+                </div>
+                <div class="worker-stat-box box-emerald">
+                  <span class="stat-big-num text-emerald" id="worker-stat-completed">03</span>
+                  <span class="stat-box-lbl">Completed</span>
+                </div>
+                <div class="worker-stat-box box-amber">
+                  <span class="stat-big-num text-amber" id="worker-stat-inprogress">01</span>
+                  <span class="stat-box-lbl">In Progress</span>
+                </div>
+                <div class="worker-stat-box box-neutral">
+                  <span class="stat-big-num text-muted" id="worker-stat-remaining">04</span>
+                  <span class="stat-box-lbl">Remaining</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Main Current Active Task Card -->
+            <div class="dashboard-section" id="section-current-task">
+              <div class="section-title-row">
+                <span class="section-heading text-cyan">CURRENT TASK</span>
+                <span class="priority-badge-pill badge-high">HIGH PRIORITY</span>
+              </div>
+
+              <div class="active-task-hero-card">
+                <div class="task-hero-top">
+                  <div class="task-thumb-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-400)" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </div>
+
+                  <div class="task-hero-info">
+                    <div class="task-hero-title-row">
+                      <h3 id="current-task-title">Roadside Garbage</h3>
+                      <span class="task-code" id="current-task-id">#WR-2048</span>
+                    </div>
+                    <span class="task-hero-location" id="current-task-loc">📍 SRMIST Main Gate, Kattankulathur</span>
+                  </div>
+                </div>
+
+                <div class="task-meta-chips">
+                  <span class="task-chip">📏 450 m away</span>
+                  <span class="task-chip chip-amber" id="current-task-status-chip">● IN PROGRESS</span>
+                </div>
+
+                <!-- Vertical Step Timeline -->
+                <div class="worker-task-stepper">
+                  <div class="step-row completed">
+                    <div class="step-circle">✓</div>
+                    <span>Assigned</span>
+                  </div>
+                  <div class="step-row completed">
+                    <div class="step-circle">✓</div>
+                    <span>Accepted</span>
+                  </div>
+                  <div class="step-row in-progress" id="step-row-cleaning">
+                    <div class="step-pulse-circle"><span class="step-dot"></span></div>
+                    <span class="font-bold text-cyan">Cleaning In Progress</span>
+                  </div>
+                  <div class="step-row" id="step-row-proof">
+                    <div class="step-empty-circle"></div>
+                    <span>Upload Proof</span>
+                  </div>
+                  <div class="step-row" id="step-row-complete">
+                    <div class="step-empty-circle"></div>
+                    <span>Completed</span>
+                  </div>
+                </div>
+
+                <!-- Duty Lock Warning if Off Duty -->
+                <div class="duty-lock-warning hidden" id="task-duty-lock">
+                  <span>Go On Duty to start and update assigned tasks.</span>
+                </div>
+
+                <!-- Primary / Secondary Action Buttons -->
+                <div class="task-hero-actions">
+                  <button type="button" class="btn-task-navigate" onclick="window.westeRouteNavigateGps()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                    <span>Navigate</span>
+                  </button>
+                  <button type="button" class="btn-task-update-status" onclick="window.westeRouteOpenStatusSheet()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <span>Update Status</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Cleaning Proof Section (Before & After Photos) -->
+            <div class="dashboard-section">
+              <span class="section-heading">CLEANING PROOF</span>
+              <div class="cleaning-proof-card glass-card-primary">
+                <div class="proof-photo-row">
+                  <!-- Before Photo Box -->
+                  <div class="proof-box" id="box-proof-before" onclick="window.westeRouteToggleProofPhoto('before')">
+                    <div class="proof-cam-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                    </div>
+                    <span class="proof-title">BEFORE</span>
+                    <span class="proof-sub" id="lbl-proof-before">+ Add Photo</span>
+                  </div>
+
+                  <!-- After Photo Box -->
+                  <div class="proof-box" id="box-proof-after" onclick="window.westeRouteToggleProofPhoto('after')">
+                    <div class="proof-cam-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                    </div>
+                    <span class="proof-title">AFTER</span>
+                    <span class="proof-sub" id="lbl-proof-after">+ Add Photo</span>
+                  </div>
+                </div>
+
+                <!-- AI Verification Status Strip -->
+                <div class="ai-proof-status hidden" id="ai-proof-checking">
+                  <span class="btn-spinner"></span>
+                  <span>Checking cleaning proof with YOLOv8 neural model...</span>
+                </div>
+
+                <div class="ai-proof-verified hidden" id="ai-proof-verified">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--emerald-400)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <div>
+                    <strong>✓ Photo Verified · High Confidence</strong>
+                    <p>✓ No Duplicate or Fake Image Detected</p>
+                  </div>
+                </div>
+
+                <p class="proof-guide-msg" id="proof-guide-msg">Add both before and after photos to verify and complete this task.</p>
+
+                <button type="button" class="btn-mark-completed" id="btn-mark-task-completed" disabled onclick="window.westeRouteCompleteTaskFromProof()">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Mark Task Completed</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 6. Task Location Map Preview -->
+            <div class="dashboard-section">
+              <span class="section-heading">TASK LOCATION</span>
+              <div class="task-location-card">
+                <div class="task-map-canvas">
+                  <svg width="100%" height="160" viewBox="0 0 360 160" preserveAspectRatio="none">
+                    <rect x="0" y="0" width="360" height="160" fill="var(--map-bg)"/>
+                    <!-- Buildings -->
+                    <rect x="20" y="15" width="100" height="55" rx="8" fill="var(--map-block)"/>
+                    <rect x="230" y="15" width="110" height="50" rx="8" fill="var(--map-block)"/>
+                    <rect x="20" y="95" width="90" height="50" rx="8" fill="var(--map-block)"/>
+                    <rect x="220" y="85" width="120" height="60" rx="8" fill="var(--map-block)"/>
+                    <!-- Roads -->
+                    <line x1="0" y1="80" x2="360" y2="80" stroke="var(--map-road)" stroke-width="18" stroke-linecap="round"/>
+                    <line x1="160" y1="0" x2="160" y2="160" stroke="var(--map-road)" stroke-width="16" stroke-linecap="round"/>
+                    <!-- Route Path -->
+                    <path d="M160 125 L160 80 L280 80" stroke="#0284c7" stroke-width="4" stroke-dasharray="8 6" fill="none"/>
+                    <!-- Worker Starting Dot -->
+                    <circle cx="160" cy="125" r="16" fill="rgba(56, 189, 248, 0.3)" class="radar-pulse-anim"/>
+                    <circle cx="160" cy="125" r="7" fill="#0284c7"/>
+                    <circle cx="160" cy="125" r="3" fill="#ffffff"/>
+                    <!-- Destination Pin -->
+                    <circle cx="280" cy="80" r="8" fill="#f43f5e"/>
+                    <circle cx="280" cy="80" r="3.5" fill="#ffffff"/>
+                  </svg>
+                  <div class="map-eta-badge">⚡ ETA: 3 min (450 m away)</div>
+                </div>
+
+                <div class="location-card-footer">
+                  <span class="location-full-text">📍 SRMIST Main Gate, Kattankulathur</span>
+                  <div class="location-btn-row">
+                    <button type="button" class="btn-loc-view" onclick="alert('Viewing SRMIST Main Gate satellite GPS coordinates.')">View Location</button>
+                    <button type="button" class="btn-loc-nav" onclick="window.westeRouteNavigateGps()">Navigate →</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 7. Next Task Section (Up Next) -->
+            <div class="dashboard-section">
+              <span class="section-heading">UP NEXT</span>
+              <div class="next-task-card" onclick="alert('Viewing Task #WR-2050 at SRM Tech Park.')">
+                <div class="next-task-top">
+                  <div class="next-task-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  </div>
+                  <div class="next-task-info">
+                    <h4>Overflowing Public Bin</h4>
+                    <span class="next-task-sub">📍 SRM Tech Park · #WR-2050</span>
+                    <div class="next-task-tags">
+                      <span>📏 850 m (5 min)</span>
+                      <span class="tag-amber">MEDIUM PRIORITY</span>
+                    </div>
+                  </div>
+                  <span class="next-task-arrow">→</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 8. Today's Route Timeline -->
+            <div class="dashboard-section">
+              <span class="section-heading">TODAY'S ROUTE</span>
+              <div class="route-timeline-card glass-card-primary">
+                <div class="route-node completed">
+                  <div class="node-icon-circle">✓</div>
+                  <div class="node-content">
+                    <span class="font-bold">SRM University Campus</span>
+                    <span class="text-muted">Depot Starting Point</span>
+                  </div>
+                </div>
+                <div class="route-line completed"></div>
+
+                <div class="route-node current">
+                  <div class="node-pulse-circle"><span class="pulse-dot"></span></div>
+                  <div class="node-content">
+                    <span class="font-bold text-cyan">SRMIST Main Gate</span>
+                    <span class="text-cyan">Current Task · 450 m</span>
+                  </div>
+                </div>
+                <div class="route-line"></div>
+
+                <div class="route-node">
+                  <div class="node-empty-circle"></div>
+                  <div class="node-content">
+                    <span>SRM Tech Park</span>
+                    <span class="text-muted">Next Task · 850 m</span>
+                  </div>
+                </div>
+                <div class="route-line"></div>
+
+                <div class="route-node">
+                  <div class="node-empty-circle"></div>
+                  <div class="node-content">
+                    <span>SRM Hostel Zone</span>
+                    <span class="text-muted">1.1 km</span>
+                  </div>
+                </div>
+                <div class="route-line"></div>
+
+                <div class="route-node">
+                  <div class="node-empty-circle"></div>
+                  <div class="node-content">
+                    <span>SRM Hospital Area</span>
+                    <span class="text-muted">1.2 km</span>
+                  </div>
+                </div>
+                <div class="route-line"></div>
+
+                <div class="route-node">
+                  <div class="node-empty-circle"></div>
+                  <div class="node-content">
+                    <span>Potheri Main Road</span>
+                    <span class="text-muted">1.5 km</span>
+                  </div>
+                </div>
+
+                <div class="route-footer-strip">
+                  <span class="text-cyan font-bold">4 stops remaining</span>
+                  <span>Est. Route Finish 03:40 PM</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 9. Assigned Tasks Queue with Filter Chips -->
+            <div class="dashboard-section">
+              <div class="section-title-row">
+                <span class="section-heading">ASSIGNED TASKS</span>
+                <span class="text-cyan font-bold" id="task-filter-count">5 tasks</span>
+              </div>
+
+              <!-- Filter Chips -->
+              <div class="task-filter-chips">
+                <button type="button" class="filter-chip active" onclick="window.westeRouteFilterTasks('all', this)">All</button>
+                <button type="button" class="filter-chip" onclick="window.westeRouteFilterTasks('urgent', this)">Urgent</button>
+                <button type="button" class="filter-chip" onclick="window.westeRouteFilterTasks('assigned', this)">Assigned</button>
+                <button type="button" class="filter-chip" onclick="window.westeRouteFilterTasks('in_progress', this)">In Progress</button>
+                <button type="button" class="filter-chip" onclick="window.westeRouteFilterTasks('completed', this)">Completed</button>
+              </div>
+
+              <div class="assigned-task-list" id="assigned-task-container">
+                <!-- Tasks will render here -->
+              </div>
+            </div>
+
+            <!-- 10. Worker Collection QR Card -->
+            <div class="dashboard-section">
+              <span class="section-heading text-purple">MY COLLECTION QR</span>
+              <div class="worker-qr-card" onclick="window.westeRouteOpenFullScreenQr()">
+                <div class="qr-code-box">
+                  <svg width="84" height="84" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="9" y="9" width="6" height="6"></rect></svg>
+                </div>
+                <h3>Rahul Kumar</h3>
+                <span class="qr-worker-sub">Worker ID: WR-W-204 · SRMIST – Kattankulathur</span>
+                <p>Show this QR to residents after household waste collection to confirm doorstep service.</p>
+                <button type="button" class="btn-show-full-qr">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                  <span>Show Full Screen QR</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 11. Household Collection Counter -->
+            <div class="dashboard-section">
+              <span class="section-heading">TODAY'S HOME COLLECTIONS</span>
+              <div class="home-collection-card glass-card-primary">
+                <div class="home-col-top">
+                  <div>
+                    <h4>24 / 36 Verified</h4>
+                    <span class="text-muted">12 households remaining today</span>
+                  </div>
+                  <span class="text-purple font-black" style="font-size: 24px;">67%</span>
+                </div>
+                <div class="home-prog-bar-bg">
+                  <div class="home-prog-bar-fill" style="width: 67%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 12. Worker Daily Progress & Efficiency Ring -->
+            <div class="dashboard-section">
+              <span class="section-heading">TODAY'S PROGRESS</span>
+              <div class="worker-metrics-grid">
+                <div class="metric-card">
+                  <span class="metric-num text-emerald" id="prog-tasks-done">03</span>
+                  <span class="metric-title">Tasks Completed</span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-num text-purple">24</span>
+                  <span class="metric-title">Home Collections</span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-num text-cyan">08</span>
+                  <span class="metric-title">Photos Submitted</span>
+                </div>
+                <div class="metric-card">
+                  <span class="metric-num text-blue">12.6 km</span>
+                  <span class="metric-title">Route Covered</span>
+                </div>
+              </div>
+
+              <!-- Efficiency Ring Card -->
+              <div class="efficiency-ring-card glass-card-primary" style="margin-top: 12px;">
+                <div class="efficiency-info">
+                  <span class="tag-cyan">WORKER EFFICIENCY</span>
+                  <h4>Outstanding Shift Pace</h4>
+                  <p>6 of 8 tasks handled on time</p>
+                </div>
+                <div class="efficiency-gauge">
+                  <svg width="76" height="76" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(51, 65, 85, 0.3)" stroke-width="10"/>
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#38bdf8" stroke-width="10" stroke-dasharray="190 251" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+                  </svg>
+                  <span class="efficiency-pct">76%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 13. Completed Tasks Today -->
+            <div class="dashboard-section">
+              <span class="section-heading text-emerald">COMPLETED TODAY</span>
+              <div class="completed-tasks-card glass-card-primary">
+                <div class="completed-item">
+                  <div class="comp-icon">✓</div>
+                  <div class="comp-text">
+                    <h5>Public Bin Cleaned</h5>
+                    <span>📍 Kattankulathur Railway Station</span>
+                  </div>
+                  <span class="comp-time">Completed<br>11:24 AM</span>
+                </div>
+                <div class="completed-item">
+                  <div class="comp-icon">✓</div>
+                  <div class="comp-text">
+                    <h5>Roadside Waste Removed</h5>
+                    <span>📍 GST Road, Kattankulathur</span>
+                  </div>
+                  <span class="comp-time">Completed<br>10:02 AM</span>
+                </div>
+                <div class="completed-item">
+                  <div class="comp-icon">✓</div>
+                  <div class="comp-text">
+                    <h5>Collection Completed</h5>
+                    <span>📍 SRM Food Court Area</span>
+                  </div>
+                  <span class="comp-time">Completed<br>09:18 AM</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 14. Recent Activity Timeline -->
+            <div class="dashboard-section">
+              <span class="section-heading">RECENT ACTIVITY</span>
+              <div class="worker-activity-card glass-card-primary">
+                <div class="act-item">
+                  <span class="act-dot dot-cyan"></span>
+                  <div class="act-content">
+                    <h6>Task #WR-2048 started</h6>
+                    <span>📍 SRMIST Main Gate · 12:14 PM</span>
+                  </div>
+                </div>
+                <div class="act-item">
+                  <span class="act-dot dot-blue"></span>
+                  <div class="act-content">
+                    <h6>Arrived at location</h6>
+                    <span>📍 SRMIST Main Gate · 12:08 PM</span>
+                  </div>
+                </div>
+                <div class="act-item">
+                  <span class="act-dot dot-emerald"></span>
+                  <div class="act-content">
+                    <h6>Task #WR-2046 completed</h6>
+                    <span>📍 Kattankulathur Railway Station · 11:24 AM</span>
+                  </div>
+                </div>
+                <div class="act-item">
+                  <span class="act-dot dot-purple"></span>
+                  <div class="act-content">
+                    <h6>Household collection verified</h6>
+                    <span>📍 Potheri Residential Area · 10:52 AM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 15. Notifications Preview -->
+            <div class="dashboard-section">
+              <div class="section-title-row">
+                <span class="section-heading">NOTIFICATIONS</span>
+                <a href="#" class="view-all-link" onclick="alert('Viewing all worker field notifications.')">View All →</a>
+              </div>
+              <div class="worker-notif-card glass-card-primary">
+                <div class="notif-row">
+                  <div class="notif-icon-circle bg-cyan">🔔</div>
+                  <div class="notif-text-col">
+                    <div class="notif-hdr">
+                      <h6>New Assignment</h6>
+                      <span>2 min ago</span>
+                    </div>
+                    <p>A roadside garbage complaint near SRM Tech Park has been assigned to you (850 m away).</p>
+                  </div>
+                </div>
+
+                <div class="notif-row">
+                  <div class="notif-icon-circle bg-red">⚠</div>
+                  <div class="notif-text-col">
+                    <div class="notif-hdr">
+                      <h6>Priority Updated</h6>
+                      <span>14 min ago</span>
+                    </div>
+                    <p>Task #WR-2055 near Potheri Main Road has been marked URGENT.</p>
+                  </div>
+                </div>
+
+                <div class="notif-row">
+                  <div class="notif-icon-circle bg-emerald">✓</div>
+                  <div class="notif-text-col">
+                    <div class="notif-hdr">
+                      <h6>Collection Confirmed</h6>
+                      <span>45 min ago</span>
+                    </div>
+                    <p>A resident in Potheri Residential Area confirmed doorstep collection.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="height: 36px;"></div>
+          </div>
+
+          <!-- 16. Worker Floating Bottom Navigation -->
+          <nav class="premium-bottom-nav worker-bottom-nav">
+            <div class="nav-tab active" id="worker-tab-home" onclick="window.westeRouteSelectWorkerNav('home')">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              <span>Home</span>
+              <div class="nav-indicator"></div>
+            </div>
+
+            <div class="nav-tab" id="worker-tab-tasks" onclick="window.westeRouteSelectWorkerNav('tasks')">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              <span>Tasks</span>
+              <div class="nav-indicator"></div>
+            </div>
+
+            <div class="nav-tab" id="worker-tab-route" onclick="window.westeRouteSelectWorkerNav('route')">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="19" r="3"></circle><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path><circle cx="18" cy="5" r="3"></circle></svg>
+              <span>Route</span>
+              <div class="nav-indicator"></div>
+            </div>
+
+            <div class="nav-tab" id="worker-tab-qr" onclick="window.westeRouteOpenFullScreenQr()">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <span>QR</span>
+              <div class="nav-indicator"></div>
+            </div>
+
+            <div class="nav-tab" id="worker-tab-profile" onclick="window.westeRouteSelectWorkerNav('profile')">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>Profile</span>
+              <div class="nav-indicator"></div>
+            </div>
+          </nav>
+        </section>
+
+        <!-- ===================================================================
+             FULL SCREEN WORKER QR MODAL
+             =================================================================== -->
+        <div class="full-qr-modal hidden" id="modal-worker-qr">
+          <div class="full-qr-content">
+            <div class="modal-top-bar">
+              <button type="button" class="btn-close-modal" onclick="window.westeRouteCloseFullScreenQr()">✕</button>
+              <h4>Collection QR</h4>
+              <div style="width: 36px;"></div>
+            </div>
+
+            <span class="qr-brand-tag">WasteRoute</span>
+            <h3>Household Collection Confirmation</h3>
+
+            <div class="full-qr-card-box" id="full-qr-card-box">
+              <svg width="180" height="180" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="9" y="9" width="6" height="6"></rect></svg>
+              <h4>Rahul Kumar</h4>
+              <span class="qr-modal-id">Worker ID: WR-W-204</span>
+              <span class="qr-modal-zone">SRMIST – Kattankulathur</span>
+            </div>
+
+            <p class="qr-modal-guide">Ask the resident to scan this QR after waste collection is completed.</p>
+
+            <button type="button" class="btn-toggle-brightness" id="btn-toggle-brightness" onclick="window.westeRouteToggleBrightness()">
+              <span>Increase Screen Brightness</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             STATUS UPDATE MODAL BOTTOM SHEET
+             =================================================================== -->
+        <div class="status-sheet-modal hidden" id="modal-task-status">
+          <div class="status-sheet-scrim" onclick="window.westeRouteCloseStatusSheet()"></div>
+          <div class="status-sheet-card">
+            <div class="sheet-drag-handle"></div>
+            <h3>Update Task Status</h3>
+            <p>Select the new field status for complaint #WR-2048</p>
+
+            <div class="status-option-list">
+              <div class="status-opt" onclick="window.westeRouteSelectStatus('PENDING')">
+                <span class="status-dot dot-neutral"></span>
+                <div class="status-opt-text">
+                  <strong>Pending</strong>
+                  <span>Task awaiting worker acceptance</span>
+                </div>
+              </div>
+
+              <div class="status-opt" onclick="window.westeRouteSelectStatus('ASSIGNED')">
+                <span class="status-dot dot-blue"></span>
+                <div class="status-opt-text">
+                  <strong>Assigned</strong>
+                  <span>Worker assigned, en route to location</span>
+                </div>
+              </div>
+
+              <div class="status-opt active" onclick="window.westeRouteSelectStatus('IN_PROGRESS')">
+                <span class="status-dot dot-amber"></span>
+                <div class="status-opt-text">
+                  <strong>In Progress</strong>
+                  <span>Cleaning in progress on ground</span>
+                </div>
+                <span class="status-check">✓</span>
+              </div>
+
+              <div class="status-opt" onclick="window.westeRouteSelectStatus('COMPLETED')">
+                <span class="status-dot dot-emerald"></span>
+                <div class="status-opt-text">
+                  <strong>Completed</strong>
+                  <span>Garbage cleared and verified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Android Home Bar indicator -->
+      <div class="android-nav-bar">
+        <div class="home-indicator"></div>
+      </div>
+
+      <!-- Google Account Chooser Modal Bottom Sheet -->
+      <div id="google-account-modal" class="google-modal-backdrop" style="display:none;">
+        <div class="google-modal-card">
+          <div class="google-modal-header">
+            <div class="google-modal-brand">
+              <svg width="22" height="22" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12 5c1.5 0 2.9.5 4 1.5l3-3C17.2 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+                <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3 0-.8.1-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12.5s.7 2.8 1.9 5.2l3.7-2.9z"/>
+                <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16c1.8 3.7 5.6 7 10.1 7z"/>
+              </svg>
+              <span>Sign in with Google</span>
+            </div>
+            <button type="button" class="google-modal-close" id="btn-close-google-modal">&times;</button>
+          </div>
+
+          <div class="google-modal-titles">
+            <h3>Choose an account</h3>
+            <p>to continue to WesteRoute Citizen Portal</p>
+          </div>
+
+          <div class="google-account-list">
+            <div class="google-account-row" data-name="Swagata" data-email="swagata@gmail.com">
+              <div class="google-avatar" style="background: linear-gradient(135deg, #10B981, #059669);">S</div>
+              <div class="google-account-info">
+                <span class="account-name">Swagata</span>
+                <span class="account-email">swagata@gmail.com</span>
+              </div>
+              <span class="account-badge">Primary</span>
+            </div>
+
+            <div class="google-account-row" data-name="Swagata Citizen" data-email="swagata.citizendev@gmail.com">
+              <div class="google-avatar" style="background: linear-gradient(135deg, #06B6D4, #0284C7);">S</div>
+              <div class="google-account-info">
+                <span class="account-name">Swagata Citizen</span>
+                <span class="account-email">swagata.citizendev@gmail.com</span>
+              </div>
+            </div>
+
+            <div class="google-account-row google-account-custom" id="row-add-google-account">
+              <div class="google-avatar" style="background: rgba(148, 163, 184, 0.2); color: var(--text-primary);">+</div>
+              <div class="google-account-info">
+                <span class="account-name">Use another Google account</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="google-signing-in-indicator" class="google-signing-in" style="display:none;">
+            <div class="mini-spinner"></div>
+            <span id="google-signing-in-text">Connecting to Google...</span>
+          </div>
+
+          <p class="google-disclaimer">
+            To continue, Google will share your name, email address, and language preference with WesteRoute. Review WesteRoute's Privacy Policy and Terms of Service.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

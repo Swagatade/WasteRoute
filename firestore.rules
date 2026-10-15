@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Shared by the Android app and the Supervisor web app (project westroute-b0550).
+
+    function signedIn() { return request.auth != null; }
+    // Worker accounts are provisioned under @worker.in; everyone else is a citizen or supervisor.
+    function isWorker() { return signedIn() && request.auth.token.email != null && request.auth.token.email.matches('.*@worker[.]in'); }
+
+    // Map data: public read, signed-in write.
+    match /smart_bins/{id}  { allow read: if true; allow write: if signedIn(); }
+    match /workers/{id}     { allow read: if true; allow write: if signedIn(); }
+    match /complaints/{id}  { allow read: if true; allow create, update: if signedIn(); allow delete: if false; }
+
+    // Timetable: supervisors (any signed-in non-worker) create/delete slots.
+    // Anyone signed in may only flip a slot to started/completed (workers: "In Progress",
+    // residents scanning the worker QR: "Completed") and nothing else on it.
+    match /schedules/{id} {
+      allow read: if signedIn();
+      allow delete: if signedIn() && !isWorker();
+      // Supervisors create any slot. A worker's phone may only create the daily slot of an existing
+      // routine assigned to that worker (id = "<templateId>_<date>"), always as "Scheduled".
+      allow create: if signedIn() && (
+        !isWorker() || (
+          request.resource.data.templateId is string &&
+          id == request.resource.data.templateId + '_' + request.resource.data.date &&
+          exists(/databases/$(database)/documents/schedule_templates/$(request.resource.data.templateId)) &&
+          get(/databases/$(database)/documents/schedule_templates/$(request.resource.data.templateId)).data.workerId == request.resource.data.workerId &&
+          request.resource.data.status == 'Scheduled'
+        )
+      );
+      allow update: if signedIn() && (
+        !isWorker() ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+      ) && (
+        !isWorker() ||
+        request.resource.data.status in ['Scheduled', 'In Progress']
+      ) || (
+        signedIn() &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'completedAt', 'completedByCitizenUid', 'completedByCitizenName']) &&
+        request.resource.data.status == 'Completed' &&
+        request.resource.data.completedByCitizenUid == request.auth.uid
+      );
+    }
+
+    // Daily recurring routines; only supervisors manage them.
+    match /schedule_templates/{id} {
+      allow read: if signedIn();
+      allow write: if signedIn() && !isWorker();
+    }
+
+    // Audit trail of resident confirmations: create-only, tied to the signed-in resident.
+    match /collection_logs/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.citizenUid == request.auth.uid;
+      allow update, delete: if false;
+    }
+  }
+}

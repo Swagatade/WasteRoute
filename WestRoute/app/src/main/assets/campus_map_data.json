@@ -1,0 +1,240 @@
+{
+  "smart_bins": [
+    {
+      "id": "BIN-KTR-01",
+      "code": "SRM-UB-01",
+      "wardId": "ward-ktr-01",
+      "location": "UB Building Ground Plaza",
+      "fillLevel": 94,
+      "type": "Dry Recyclables & Paper",
+      "battery": "96%",
+      "temperature": "26°C",
+      "status": "Critical Alert",
+      "lastEmptied": "14 Hours ago",
+      "coordinates": {
+        "lat": 12.8232,
+        "lng": 80.0445
+      },
+      "name": "UB Building Ground Plaza",
+      "zone": "Academic Zone",
+      "distance": "250 m"
+    },
+    {
+      "id": "BIN-KTR-02",
+      "code": "SRM-TP-02",
+      "wardId": "ward-ktr-02",
+      "location": "Tech Park Tower A Ground Hub",
+      "fillLevel": 42,
+      "type": "E-Waste & Mixed Dry",
+      "battery": "99%",
+      "temperature": "24°C",
+      "status": "Normal",
+      "lastEmptied": "3 Hours ago",
+      "coordinates": {
+        "lat": 12.8248,
+        "lng": 80.0456
+      },
+      "name": "Tech Park Tower A Ground Hub",
+      "zone": "Tech Zone",
+      "distance": "420 m"
+    },
+    {
+      "id": "BIN-KTR-03",
+      "code": "SRM-JG-03",
+      "wardId": "ward-ktr-03",
+      "location": "Java Green Food Street Pavilion",
+      "fillLevel": 91,
+      "type": "Organic Food Waste",
+      "battery": "91%",
+      "temperature": "28°C",
+      "status": "Critical Alert",
+      "lastEmptied": "9 Hours ago",
+      "coordinates": {
+        "lat": 12.8225,
+        "lng": 80.0438
+      },
+      "name": "Java Green Food Street Pavilion",
+      "zone": "Cafeteria Zone",
+      "distance": "180 m"
+    },
+    {
+      "id": "BIN-KTR-04",
+      "code": "SRM-HST-04",
+      "wardId": "ward-ktr-04",
+      "location": "Paari / Kaari Hostel Courtyard",
+      "fillLevel": 78,
+      "type": "General Domestic Waste",
+      "battery": "88%",
+      "temperature": "27°C",
+      "status": "Warning",
+      "lastEmptied": "7 Hours ago",
+      "coordinates": {
+        "lat": 12.821,
+        "lng": 80.0415
+      },
+      "name": "Paari / Kaari Hostel Courtyard",
+      "zone": "Residential Zone",
+      "distance": "550 m"
+    },
+    {
+      "id": "BIN-KTR-05",
+      "code": "SRM-GT1-05",
+      "wardId": "ward-ktr-05",
+      "location": "SRM Main Gate 1 (GST Road Transit)",
+      "fillLevel": 85,
+      "type": "Plastic & Bottles",
+      "battery": "95%",
+      "temperature": "25°C",
+      "status": "Warning",
+      "lastEmptied": "8 Hours ago",
+      "coordinates": {
+        "lat": 12.8258,
+        "lng": 80.047
+      },
+      "name": "SRM Main Gate 1 (GST Road Transit)",
+      "zone": "Perimeter Transit",
+      "distance": "650 m"
+    },
+    {
+      "id": "BIN-KTR-06",
+      "code": "SRM-MED-06",
+      "wardId": "ward-ktr-05",
+      "location": "Medical College Hospital Gate 3",
+      "fillLevel": 32,
+      "type": "Non-Hazardous Hospital Waste",
+      "battery": "98%",
+      "temperature": "23°C",
+      "status": "Normal",
+      "lastEmptied": "2 Hours ago",
+      "coordinates": {
+        "lat": 12.8202,
+        "lng": 80.0485
+      },
+      "name": "Medical College Hospital Gate 3",
+      "zone": "Perimeter Transit",
+      "distance": "800 m"
+    },
+    {
+      "id": "BIN-KTR-07",
+      "code": "SRM-LIB-07",
+      "wardId": "ward-ktr-01",
+      "location": "Central Library Square Avenue",
+      "fillLevel": 25,
+      "type": "Paper & Cardboard",
+      "battery": "97%",
+      "temperature": "24°C",
+      "status": "Normal",
+      "lastEmptied": "1 Hour ago",
+      "coordinates": {
+        "lat": 12.8239,
+        "lng": 80.043
+      },
+      "name": "Central Library Square Avenue",
+      "zone": "Academic Zone",
+      "distance": "120 m"
+    }
+  ],
+  "complaints": [
+    {
+      "id": "CMP-8092",
+      "ticketNo": "WR-KTR-8092",
+      "category": "Overflowing Bin",
+      "priority": "High",
+      "status": "Pending",
+      "wardId": "ward-ktr-03",
+      "wardName": "SRM KTR Cafeteria Zone (Java Green & Clock Tower)",
+      "location": "Java Green Food Street, Tech Park Walkway",
+      "coordinates": {
+        "lat": 12.8225,
+        "lng": 80.0438
+      },
+      "citizen": {
+        "name": "Aarav Patel",
+        "phone": "+91 98401 23456",
+        "email": "aarav.ktr@srmist.edu.in",
+        "badge": "Verified Student"
+      },
+      "reportedAt": "15 Mins ago",
+      "description": "Food court beverage and paper plate disposal bin overflowing onto pedestrian path.",
+      "photoBefore": "https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=800&q=80",
+      "assignedWorkerId": null,
+      "cleaningProof": null
+    },
+    {
+      "id": "CMP-8091",
+      "ticketNo": "WR-KTR-8091",
+      "category": "Hazardous Waste",
+      "priority": "Critical",
+      "status": "In Progress",
+      "wardId": "ward-ktr-02",
+      "wardName": "SRM KTR Tech Zone (Tech Park & IT)",
+      "location": "Tech Park Tower A, Behind Mechanical Labs",
+      "coordinates": {
+        "lat": 12.8248,
+        "lng": 80.0456
+      },
+      "citizen": {
+        "name": "Ananya Sundaram",
+        "phone": "+91 97412 55432",
+        "email": "ananya.s@srmist.edu.in",
+        "badge": "Faculty Rep"
+      },
+      "reportedAt": "35 Mins ago",
+      "description": "Discarded lab chemical containers and batteries left near drainage channel.",
+      "photoBefore": "https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&w=800&q=80",
+      "assignedWorkerId": null,
+      "cleaningProof": null
+    },
+    {
+      "id": "CMP-8089",
+      "ticketNo": "WR-KTR-8089",
+      "category": "Illegal Dumping",
+      "priority": "High",
+      "status": "In Progress",
+      "wardId": "ward-ktr-04",
+      "wardName": "SRM KTR Residential Zone (Paari & Kaari Hostels)",
+      "location": "Paari Hostel C-Block Rear Lawn",
+      "coordinates": {
+        "lat": 12.821,
+        "lng": 80.0415
+      },
+      "citizen": {
+        "name": "Vikram Chawla",
+        "phone": "+91 98200 87654",
+        "email": "vikram.c@srmist.edu.in",
+        "badge": "Hostel Warden"
+      },
+      "reportedAt": "1 Hour ago",
+      "description": "Packaging material and construction rubble discarded near residential lawn.",
+      "photoBefore": "https://images.unsplash.com/photo-1605600659908-0ef719419d41?auto=format&fit=crop&w=800&q=80",
+      "assignedWorkerId": null,
+      "cleaningProof": null
+    },
+    {
+      "id": "CMP-8085",
+      "ticketNo": "WR-KTR-8085",
+      "category": "Overflowing Bin",
+      "priority": "Medium",
+      "status": "Resolved",
+      "wardId": "ward-ktr-01",
+      "wardName": "SRM KTR Academic Zone (UB & Library)",
+      "location": "UB Building Central Plaza Steps",
+      "coordinates": {
+        "lat": 12.8232,
+        "lng": 80.0445
+      },
+      "citizen": {
+        "name": "Divya Krishnan",
+        "phone": "+91 99011 34567",
+        "email": "divya.k@srmist.edu.in",
+        "badge": "Verified Student"
+      },
+      "reportedAt": "2 Hours ago",
+      "description": "Recycling bin filled with examination papers cleared by custodial staff.",
+      "photoBefore": "https://images.unsplash.com/photo-1528323273322-d81458248d40?auto=format&fit=crop&w=800&q=80",
+      "assignedWorkerId": null,
+      "cleaningProof": null
+    }
+  ],
+  "workers": []
+}
