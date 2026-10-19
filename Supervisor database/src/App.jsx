@@ -10,7 +10,6 @@ import WorkerRegistrationView from './views/WorkerRegistrationView';
 import MapView from './views/MapView';
 import RoutesView from './views/RoutesView';
 import HouseholdsView from './views/HouseholdsView';
-import ReportsView from './views/ReportsView';
 import { 
   INITIAL_COMPLAINTS, 
   INITIAL_WORKERS, 
@@ -371,14 +370,6 @@ function DashboardLayout() {
           )}
 
 
-
-          {activeTab === 'reports' && (
-            <ReportsView 
-              complaints={complaints}
-              workers={workers}
-              bins={bins}
-            />
-          )}
         </main>
       </div>
 

@@ -65,7 +65,7 @@ WasteRoute/
 │   └── .env.example           #   Android environment template
 ├── Supervisor database/       # Supervisor web dashboard (React + Vite)
 │   ├── src/
-│   │   ├── views/             #   Overview, Complaints, Workers, Routes, Households, Map, Reports…
+│   │   ├── views/             #   Overview, Complaints, Workers, Routes, Households, Map…
 │   │   ├── components/        #   Navbar, Sidebar, StatusBadge, WorkerPhone
 │   │   ├── context/           #   AuthContext (supervisor-only sign-in)
 │   │   ├── firebase/          #   Firebase config, Firestore service, worker provisioning
@@ -118,7 +118,6 @@ WasteRoute/
 | **Areas & Hostels** | Manage collection zones and register hostel blocks (one at a time, in bulk by name, or the SRM hostels in one click), and see which homes are collected. |
 | **Worker Registration** | Provision new worker accounts (`@worker.in`) without logging the supervisor out. |
 | **Campus Map & Bins** | Leaflet + OpenStreetMap view of smart bins and worker positions. |
-| **Reports & Analytics** | Operational reports and analytics. |
 
 Access is limited to accounts on the configured supervisor domain (default `@supervisor.in`).
 

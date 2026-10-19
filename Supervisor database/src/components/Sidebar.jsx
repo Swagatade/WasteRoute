@@ -6,7 +6,6 @@ import {
   UserPlus,
   MapPin, 
   CheckCircle2, 
-  BarChart3, 
   Truck, 
   Trash2, 
   HelpCircle,
@@ -57,13 +56,6 @@ export default function Sidebar({ activeTab, onSelectTab, pendingComplaintsCount
       id: 'map', 
       label: 'Campus Map & Bins', 
       icon: MapPin,
-      badge: null
-    },
-
-    { 
-      id: 'reports', 
-      label: 'Reports & Analytics', 
-      icon: BarChart3,
       badge: null
     }
   ];

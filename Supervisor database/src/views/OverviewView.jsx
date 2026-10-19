@@ -66,7 +66,7 @@ export default function OverviewView({
       icon: CheckCircle2,
       color: '#06B6D4',
       bgGlow: 'rgba(6, 182, 212, 0.15)',
-      targetTab: 'reports'
+      targetTab: 'complaints'
     }
   ];
 
