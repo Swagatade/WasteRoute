@@ -1,4 +1,4 @@
-package com.westeroute.app.screens
+package com.wasteroute.app.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -31,29 +31,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.westeroute.app.components.ActiveTaskCard
-import com.westeroute.app.components.CompletedTasksCard
-import com.westeroute.app.components.HouseholdCollectionCounter
-import com.westeroute.app.components.NextTaskCard
-import com.westeroute.app.components.OfflineBanner
-import com.westeroute.app.components.RouteTimeline
-import com.westeroute.app.components.ShiftStatusCard
-import com.westeroute.app.components.TaskLocationCard
-import com.westeroute.app.components.TaskStatusBottomSheet
-import com.westeroute.app.components.WorkerActivityTimeline
-import com.westeroute.app.components.WorkerBottomNavigation
-import com.westeroute.app.components.WorkerHeader
-import com.westeroute.app.components.WorkerNavTab
-import com.westeroute.app.components.WorkerNotificationsPreview
-import com.westeroute.app.components.WorkerProgressMetrics
-import com.westeroute.app.components.WorkerQrCard
-import com.westeroute.app.components.WorkerSummaryCard
-import com.westeroute.app.components.WorkerTaskQueue
-import com.westeroute.app.model.MockWorkerData
-import com.westeroute.app.model.TaskStatus
-import com.westeroute.app.model.UiPerformanceMode
-import com.westeroute.app.model.WorkerProfile
-import com.westeroute.app.model.WorkerTask
+import com.wasteroute.app.components.ActiveTaskCard
+import com.wasteroute.app.components.CompletedTasksCard
+import com.wasteroute.app.components.HouseholdCollectionCounter
+import com.wasteroute.app.components.NextTaskCard
+import com.wasteroute.app.components.OfflineBanner
+import com.wasteroute.app.components.RouteTimeline
+import com.wasteroute.app.components.ShiftStatusCard
+import com.wasteroute.app.components.TaskLocationCard
+import com.wasteroute.app.components.TaskStatusBottomSheet
+import com.wasteroute.app.components.WorkerActivityTimeline
+import com.wasteroute.app.components.WorkerBottomNavigation
+import com.wasteroute.app.components.WorkerHeader
+import com.wasteroute.app.components.WorkerNavTab
+import com.wasteroute.app.components.WorkerNotificationsPreview
+import com.wasteroute.app.components.WorkerProgressMetrics
+import com.wasteroute.app.components.WorkerQrCard
+import com.wasteroute.app.components.WorkerSummaryCard
+import com.wasteroute.app.components.WorkerTaskQueue
+import com.wasteroute.app.model.MockWorkerData
+import com.wasteroute.app.model.TaskStatus
+import com.wasteroute.app.model.UiPerformanceMode
+import com.wasteroute.app.model.WorkerProfile
+import com.wasteroute.app.model.WorkerTask
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
@@ -87,28 +87,33 @@ fun WorkerDashboardScreen(
     var showProfileSheet by remember { mutableStateOf(false) }
     var showMapDialog by remember { mutableStateOf(false) }
     var showHistory by remember { mutableStateOf(false) }
+    var showReports by remember { mutableStateOf(false) }
+    var mapTarget by remember { mutableStateOf<com.wasteroute.app.model.CampusSmartBin?>(null) }
+    var detailSlotId by remember { mutableStateOf<String?>(null) }
+    val liveBins by com.wasteroute.app.firebase.FirebaseDataRepository.smartBins.collectAsState()
 
     // Dynamic Task State
-    val liveSchedule by com.westeroute.app.firebase.CollectionRepository.workerSchedule.collectAsState()
-    val liveWorkers by com.westeroute.app.firebase.FirebaseDataRepository.workers.collectAsState()
-    val allComplaints by com.westeroute.app.firebase.FirebaseDataRepository.complaints.collectAsState()
+    val liveSchedule by com.wasteroute.app.firebase.CollectionRepository.workerSchedule.collectAsState()
+    val liveWorkers by com.wasteroute.app.firebase.FirebaseDataRepository.workers.collectAsState()
+    val allComplaints by com.wasteroute.app.firebase.FirebaseDataRepository.complaints.collectAsState()
     val zoneName = liveWorkers.firstOrNull { it.id.equals(profile.id, true) }?.wardName?.ifBlank { null }
         ?: profile.workZone
-    val todayDate = remember { com.westeroute.app.firebase.CollectionRepository.todayString() }
+    val todayDate = remember { com.wasteroute.app.firebase.CollectionRepository.todayString() }
     val tasksList = remember(liveSchedule) {
-        liveSchedule.filter { it.date == todayDate }.map { slot ->
-            com.westeroute.app.model.WorkerTask(
+        // Today's slots plus earlier slots that were never completed, so an assigned task never silently disappears.
+        liveSchedule.filter { it.date == todayDate || (it.date < todayDate && !it.isCompleted) }.map { slot ->
+            com.wasteroute.app.model.WorkerTask(
                 id = slot.id,
                 title = slot.locationName.ifBlank { "Garbage collection" },
                 location = listOf(slot.locationName, slot.department).filter { it.isNotBlank() }.joinToString(", "),
                 distance = "",
-                priority = com.westeroute.app.model.TaskPriority.MEDIUM,
+                priority = com.wasteroute.app.model.TaskPriority.MEDIUM,
                 status = when {
                     slot.isCompleted -> TaskStatus.COMPLETED
                     slot.status == "In Progress" -> TaskStatus.IN_PROGRESS
                     else -> TaskStatus.ASSIGNED
                 },
-                assignedTime = slot.startTime,
+                assignedTime = if (slot.date < todayDate) "Overdue ${slot.date} ${slot.startTime}" else slot.startTime,
                 estimatedTravel = if (slot.endTime.isNotBlank()) "until ${slot.endTime}" else "",
                 description = slot.notes.ifBlank { "Collect garbage at this point and have the resident scan your QR to confirm." }
             )
@@ -116,7 +121,58 @@ fun WorkerDashboardScreen(
     }
     val currentTask = tasksList.firstOrNull { it.status != TaskStatus.COMPLETED } ?: tasksList.lastOrNull()
     val completedCount = tasksList.count { it.status == TaskStatus.COMPLETED }
+    // The map target for a slot: the matching campus bin when there is one, else the slot's own point.
+    fun slotTarget(slot: com.wasteroute.app.firebase.LiveSchedule): com.wasteroute.app.model.CampusSmartBin =
+        liveBins.firstOrNull {
+            kotlin.math.abs(it.lat - slot.lat) < 0.0003 && kotlin.math.abs(it.lng - slot.lng) < 0.0003
+        } ?: com.wasteroute.app.model.CampusSmartBin(
+            id = slot.id, code = "TASK-${slot.id}", name = slot.locationName.ifBlank { "Assigned collection point" },
+            zone = slot.department.ifBlank { "Assigned task" }, lat = slot.lat, lng = slot.lng, fillLevel = 0,
+            type = "Assigned collection", distanceDisplay = "", status = com.wasteroute.app.components.BinStatus.AVAILABLE
+        )
     val remainingCount = tasksList.count { it.status != TaskStatus.COMPLETED }
+
+    // Today's route card: the real stops (supervisor's route), in order, with their collected state.
+    val routeStops = tasksList.map { t ->
+        val slot = liveSchedule.firstOrNull { it.id == t.id }
+        com.wasteroute.app.components.RouteStop(
+            title = t.title,
+            subtitle = if (slot?.isHousehold == true) "Hostel block - warden scans your QR" else "Bin collection - photo proof",
+            distance = slot?.startTime.orEmpty(),
+            isCompleted = t.status == TaskStatus.COMPLETED,
+            isCurrent = t.id == currentTask?.id && t.status != TaskStatus.COMPLETED
+        )
+    }
+    val todayRouteName = liveSchedule.firstOrNull { it.date == todayDate && it.routeName.isNotBlank() }?.routeName.orEmpty()
+
+    // Homes of the areas the supervisor assigned to this worker (never shown to residents)
+    val allHomes by com.wasteroute.app.firebase.HouseholdRepository.all.collectAsState()
+    val myAreaIds = liveWorkers.firstOrNull { it.id.equals(profile.id, true) }?.assignedAreaIds.orEmpty()
+    val myHomes = allHomes.filter { it.areaId in myAreaIds }
+    LaunchedEffect(Unit) { com.wasteroute.app.firebase.HouseholdRepository.listenAll() }
+
+    // Camera proof for a bin stop: the photo completes the stop and every progress bar moves.
+    var cameraSlotId by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf<String?>(null) }
+    var photoBusy by remember { mutableStateOf(false) }
+    val launchProofCamera = com.wasteroute.app.util.rememberPhotoCapture(
+        maxDim = 960,
+        onCancelled = { cameraSlotId = null }
+    ) { bitmap ->
+        val slot = liveSchedule.firstOrNull { it.id == cameraSlotId }
+        cameraSlotId = null
+        if (slot != null) {
+            photoBusy = true
+            com.wasteroute.app.firebase.CollectionRepository.completeWithPhoto(
+                slot = slot,
+                workerId = profile.id,
+                workerName = profile.name.substringBefore(" (").trim(),
+                photoDataUri = com.wasteroute.app.util.ImageUtil.toDataUri(bitmap, maxDim = 800, quality = 60)
+            ) { _, msg ->
+                photoBusy = false
+                android.widget.Toast.makeText(appContext, msg, android.widget.Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 
     // Staggered Entrance Animation States
     var headerVisible by remember { mutableStateOf(false) }
@@ -130,14 +186,14 @@ fun WorkerDashboardScreen(
 
     // Stay online in the background: the phone rings for new nearby reports even when the app is closed.
     LaunchedEffect(profile.id) {
-        if (profile.id.isNotBlank()) com.westeroute.app.notify.WorkerAlertService.start(appContext)
+        if (profile.id.isNotBlank()) com.wasteroute.app.notify.WorkerAlertService.start(appContext)
     }
 
     // Keep the daily routine slots fresh across midnight while the app stays open.
     LaunchedEffect(Unit) {
         while (true) {
             delay(15 * 60 * 1000L)
-            com.westeroute.app.firebase.CollectionRepository.refreshToday()
+            com.wasteroute.app.firebase.CollectionRepository.refreshToday()
         }
     }
 
@@ -233,7 +289,7 @@ fun WorkerDashboardScreen(
 
             // Citizen garbage reports: alarm + accept, truck trip with live progress, proof photo
             item(key = "dispatch") {
-                com.westeroute.app.components.WorkerDispatchSection(
+                com.wasteroute.app.components.WorkerDispatchSection(
                     workerId = profile.id,
                     workerName = profile.name.substringBefore(" (").trim()
                 )
@@ -268,7 +324,7 @@ fun WorkerDashboardScreen(
 
             if (currentTask == null) {
                 item(key = "no_tasks") {
-                    com.westeroute.app.components.GlassCard(
+                    com.wasteroute.app.components.GlassCard(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
                         androidx.compose.material3.Text(
@@ -291,9 +347,18 @@ fun WorkerDashboardScreen(
                     ActiveTaskCard(
                         task = currentTask,
                         isOnDuty = isOnDuty,
-                        onNavigateClick = { showMapDialog = true },
-                        onDetailsClick = { onNavigateToTaskDetail(currentTask.id) },
+                        onNavigateClick = {
+                            mapTarget = liveSchedule.firstOrNull { it.id == currentTask.id }?.let { slotTarget(it) }
+                            showMapDialog = true
+                        },
+                        onDetailsClick = { detailSlotId = currentTask.id },
                         onUpdateStatusClick = { showStatusSheet = true },
+                        onCameraClick = {
+                            cameraSlotId = currentTask.id
+                            launchProofCamera()
+                        },
+                        awaitingResidentQr = liveSchedule.firstOrNull { it.id == currentTask.id }?.isHousehold == true,
+                        cameraBusy = photoBusy,
                         performanceMode = performanceMode
                     )
                 }
@@ -313,10 +378,10 @@ fun WorkerDashboardScreen(
                     val slot = liveSchedule.firstOrNull { it.id == currentTask.id }
                     TaskLocationCard(
                         location = currentTask.location,
-                        destinationLat = slot?.lat ?: com.westeroute.app.model.CampusMapConfig.CAMPUS_LAT,
-                        destinationLng = slot?.lng ?: com.westeroute.app.model.CampusMapConfig.CAMPUS_LNG,
+                        destinationLat = slot?.lat ?: com.wasteroute.app.model.CampusMapConfig.CAMPUS_LAT,
+                        destinationLng = slot?.lng ?: com.wasteroute.app.model.CampusMapConfig.CAMPUS_LNG,
                         spot = slot?.let {
-                            com.westeroute.app.firebase.LiveComplaint(
+                            com.wasteroute.app.firebase.LiveComplaint(
                                 id = it.id, ticketNo = "Collection point", category = it.locationName,
                                 priority = "Medium", status = it.status, location = it.locationName, lat = it.lat, lng = it.lng
                             )
@@ -355,14 +420,15 @@ fun WorkerDashboardScreen(
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            // 8. Today's Route Timeline
-            item(key = "route_timeline") {
+            // 8. Today's Route Timeline (only when there is something on the route)
+            if (tasksList.isNotEmpty()) item(key = "route_timeline") {
                 AnimatedVisibility(
                     visible = routeVisible,
                     enter = fadeIn(tween(500))
                 ) {
                     RouteTimeline(
-                        stopsRemaining = remainingCount,
+                        stops = routeStops,
+                        routeName = todayRouteName,
                         estimatedCompletion = tasksList.lastOrNull()?.estimatedTravel?.removePrefix("until ")?.ifBlank { null } ?: "--",
                         performanceMode = performanceMode
                     )
@@ -381,7 +447,7 @@ fun WorkerDashboardScreen(
                 ) {
                     WorkerTaskQueue(
                         tasks = tasksList,
-                        onTaskClick = { task -> onNavigateToTaskDetail(task.id) },
+                        onTaskClick = { task -> detailSlotId = task.id },
                         performanceMode = performanceMode
                     )
                 }
@@ -405,6 +471,24 @@ fun WorkerDashboardScreen(
                         performanceMode = performanceMode
                     )
                 }
+            }
+
+            item(key = "assigned_homes") {
+                com.wasteroute.app.components.AssignedHomesCard(
+                    homes = myHomes,
+                    areaLabel = myHomes.map { it.areaName }.filter { it.isNotBlank() }.distinct().joinToString(", ")
+                        .ifBlank { "your area" },
+                    hasAssignedArea = myAreaIds.isNotEmpty(),
+                    onMarkCollected = { home ->
+                        com.wasteroute.app.firebase.HouseholdRepository.markCollected(
+                            home, profile.id, profile.name.substringBefore(" (").trim()
+                        ) { _, msg -> android.widget.Toast.makeText(appContext, msg, android.widget.Toast.LENGTH_SHORT).show() }
+                    },
+                    onShowOnMap = {
+                        mapTarget = null
+                        showMapDialog = true
+                    }
+                )
             }
 
             item(key = "spacer_home_collections") {
@@ -456,17 +540,10 @@ fun WorkerDashboardScreen(
             modifier = Modifier.align(Alignment.BottomCenter).widthIn(max = 640.dp)
         )
 
-        if (showHistory) {
-            com.westeroute.app.components.ComplaintHistoryDialog(
-                title = "Task history",
-                subtitle = "Citizen reports you accepted and solved",
-                tasks = allComplaints.filter { it.assignedWorkerId.equals(profile.id, ignoreCase = true) },
-                isWorker = true,
-                viewerId = profile.id,
-                onRemove = { list ->
-                    com.westeroute.app.firebase.DispatchRepository.hideFromHistory(list.map { it.id }, profile.id)
-                },
-                onTrack = { },
+        if (showHistory && !showReports) {
+            com.wasteroute.app.components.WorkerCollectionHistoryDialog(
+                allSlots = liveSchedule,
+                onOpenReports = { showReports = true },
                 onDismiss = {
                     showHistory = false
                     selectedNavTab = WorkerNavTab.HOME
@@ -474,16 +551,47 @@ fun WorkerDashboardScreen(
             )
         }
 
+        detailSlotId?.let { id ->
+            liveSchedule.firstOrNull { it.id == id }?.let { slot ->
+                com.wasteroute.app.components.WorkerTaskDetailDialog(
+                    slot = slot,
+                    onShowOnMap = {
+                        mapTarget = slotTarget(slot)
+                        showMapDialog = true
+                        detailSlotId = null
+                    },
+                    onDismiss = { detailSlotId = null }
+                )
+            }
+        }
+
+        if (showHistory && showReports) {
+            com.wasteroute.app.components.ComplaintHistoryDialog(
+                title = "Task history",
+                subtitle = "Citizen reports you accepted and solved",
+                tasks = allComplaints.filter { it.assignedWorkerId.equals(profile.id, ignoreCase = true) },
+                isWorker = true,
+                viewerId = profile.id,
+                onRemove = { list ->
+                    com.wasteroute.app.firebase.DispatchRepository.hideFromHistory(list.map { it.id }, profile.id)
+                },
+                onTrack = { },
+                onDismiss = { showReports = false }
+            )
+        }
+
         // 17. Open-Source OpenStreetMap Campus Telemetry Dialog
         if (showMapDialog) {
-            com.westeroute.app.components.CampusOpenStreetMapDialog(
+            com.wasteroute.app.components.CampusOpenStreetMapDialog(
+                initialSelectedBin = mapTarget,
                 complaints = allComplaints.filter {
-                    (it.assignedWorkerId.equals(profile.id, ignoreCase = true) && it.stage != com.westeroute.app.firebase.TaskStage.RESOLVED) ||
-                        (it.stage == com.westeroute.app.firebase.TaskStage.REPORTED && it.assignedWorkerId.isNullOrBlank() &&
+                    (it.assignedWorkerId.equals(profile.id, ignoreCase = true) && it.stage != com.wasteroute.app.firebase.TaskStage.RESOLVED) ||
+                        (it.stage == com.wasteroute.app.firebase.TaskStage.REPORTED && it.assignedWorkerId.isNullOrBlank() &&
                             it.notifiedWorkerIds.any { id -> id.equals(profile.id, ignoreCase = true) })
                 },
                 workers = liveWorkers.filter { it.id.equals(profile.id, ignoreCase = true) },
-                onDismiss = { showMapDialog = false }
+                households = myHomes,
+                onDismiss = { showMapDialog = false; mapTarget = null }
             )
         }
 
@@ -492,9 +600,18 @@ fun WorkerDashboardScreen(
             TaskStatusBottomSheet(
                 currentStatus = currentTask.status,
                 onStatusSelected = { newStatus ->
-                    // Only "In Progress" can be set by the worker; COMPLETED needs the resident's QR scan.
+                    // Real stops: the worker only starts them, COMPLETED needs the resident's QR scan.
+                    // Test-route stops (isMock) can be completed here since no resident is involved.
                     if (newStatus == TaskStatus.IN_PROGRESS) {
-                        com.westeroute.app.firebase.CollectionRepository.setScheduleStatus(currentTask.id, "In Progress")
+                        com.wasteroute.app.firebase.CollectionRepository.setScheduleStatus(currentTask.id, "In Progress")
+                    } else if (newStatus == TaskStatus.COMPLETED) {
+                        if (liveSchedule.firstOrNull { it.id == currentTask.id }?.isMock == true) {
+                            com.wasteroute.app.firebase.CollectionRepository.completeMockSlot(currentTask.id, profile.id) { _, msg ->
+                                android.widget.Toast.makeText(appContext, msg, android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            android.widget.Toast.makeText(appContext, "Use the camera button to clear a bin, or let the hostel warden scan your QR at a hostel block.", android.widget.Toast.LENGTH_LONG).show()
+                        }
                     }
                 },
                 onDismiss = { showStatusSheet = false },
@@ -504,15 +621,19 @@ fun WorkerDashboardScreen(
 
         // 19. Worker Profile & Account Sheet with Sign Out
         if (showProfileSheet) {
-            com.westeroute.app.components.AccountProfileBottomSheet(
+            com.wasteroute.app.components.AccountProfileBottomSheet(
                 userName = profile.name,
                 workerId = profile.id,
                 workZone = zoneName,
-                userRole = com.westeroute.app.model.UserRole.WORKER,
+                userRole = com.wasteroute.app.model.UserRole.WORKER,
                 onSeedTestData = {
-                    com.westeroute.app.firebase.MockDataSeeder.seedBins { _, msg -> android.widget.Toast.makeText(appContext, msg, android.widget.Toast.LENGTH_LONG).show() }
+                    com.wasteroute.app.firebase.MockDataSeeder.seedTodayRoute(profile.id, profile.name) { _, msg -> android.widget.Toast.makeText(appContext, msg, android.widget.Toast.LENGTH_LONG).show() }
                 },
-                onSignOut = onSignOut,
+                seedTestDataLabel = "Load today's route (mock)",
+                onSignOut = {
+                    com.wasteroute.app.firebase.HouseholdRepository.stopListening()
+                    onSignOut()
+                },
                 onDismiss = { showProfileSheet = false }
             )
         }

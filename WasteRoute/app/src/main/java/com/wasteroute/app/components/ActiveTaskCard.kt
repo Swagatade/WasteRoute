@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material.icons.outlined.EditNote
@@ -48,12 +49,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.model.TaskPriority
-import com.westeroute.app.model.TaskStatus
-import com.westeroute.app.model.UiPerformanceMode
-import com.westeroute.app.model.WorkerTask
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.model.TaskPriority
+import com.wasteroute.app.model.TaskStatus
+import com.wasteroute.app.model.UiPerformanceMode
+import com.wasteroute.app.model.WorkerTask
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
 
 @Composable
 fun ActiveTaskCard(
@@ -62,6 +63,11 @@ fun ActiveTaskCard(
     onNavigateClick: () -> Unit = {},
     onDetailsClick: () -> Unit = {},
     onUpdateStatusClick: () -> Unit = {},
+    /** Opens the camera; the photo of the cleared bin completes the stop. Null hides the button. */
+    onCameraClick: (() -> Unit)? = null,
+    /** Shown instead of the camera button for a doorstep stop that only the resident's QR scan can complete. */
+    awaitingResidentQr: Boolean = false,
+    cameraBusy: Boolean = false,
     performanceMode: UiPerformanceMode = UiPerformanceMode.PREMIUM,
     modifier: Modifier = Modifier
 ) {
@@ -423,6 +429,56 @@ fun ActiveTaskCard(
                             softWrap = false,
                             fontSize = 13.5.sp,
                             fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                }
+
+                if (task.status != TaskStatus.COMPLETED && onCameraClick != null && !awaitingResidentQr) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    // Camera proof: take a photo of the cleared bin -> stop completed, progress bar moves.
+                    Button(
+                        onClick = onCameraClick,
+                        enabled = isOnDuty && !cameraBusy,
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Emerald400,
+                            contentColor = Color(0xFF052E16)
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.CameraAlt,
+                            contentDescription = null,
+                            modifier = Modifier.size(19.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (cameraBusy) "Saving photo..." else "Take photo - garbage collected",
+                            maxLines = 1,
+                            softWrap = false,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                    }
+                } else if (task.status != TaskStatus.COMPLETED && awaitingResidentQr) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0x2638BDF8))
+                            .padding(10.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Show your QR code - the hostel warden scans it to complete this block.",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (isDark) Cyan400 else Color(0xFF0284C7)
+                            )
                         )
                     }
                 }

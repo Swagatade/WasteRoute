@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
-    <string name="app_name">WesteRoute</string>
+    <string name="app_name">WasteRoute</string>
     <string name="app_subtitle">Smart Waste Management</string>
     <string name="role_title">Choose how you want to continue</string>
-    <string name="role_subtitle">Select your role to continue to WesteRoute.</string>
+    <string name="role_subtitle">Select your role to continue to WasteRoute.</string>
     <string name="citizen_title">Citizen</string>
     <string name="citizen_desc">Report city cleanliness issues, track complaints and stay connected with your local services.</string>
     <string name="citizen_action">Continue as Citizen</string>
@@ -25,7 +25,7 @@
     <string name="create_account">Create account</string>
     <string name="already_have_account_prompt">Already have an account?</string>
     <string name="citizen_reg_badge">Citizen Registration</string>
-    <string name="citizen_reg_sub">Join WesteRoute to keep your city clean.</string>
+    <string name="citizen_reg_sub">Join WasteRoute to keep your city clean.</string>
     <string name="full_name">Full Name</string>
     <string name="email_address">Email Address</string>
     <string name="mobile_number">Mobile number</string>
@@ -35,5 +35,5 @@
     <string name="continue_google">Continue with Google</string>
     <string name="continue_github">Continue with GitHub</string>
     <string name="signup_google">Sign up with Google</string>
-    <string name="worker_authorized_notice">Authorized WesteRoute personnel access</string>
+    <string name="worker_authorized_notice">Authorized WasteRoute personnel access</string>
 </resources>

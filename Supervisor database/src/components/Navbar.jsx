@@ -69,7 +69,7 @@ export default function Navbar({
                 letterSpacing: '-0.02em',
                 color: '#FFFFFF'
               }}>
-                WestRoute
+                WasteRoute
               </span>
               <span style={{
                 background: 'rgba(16, 185, 129, 0.15)',
@@ -139,7 +139,7 @@ export default function Navbar({
             boxShadow: `0 0 8px ${isFirebaseLive ? '#10B981' : '#F59E0B'}`
           }} />
           <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-            {isFirebaseLive ? 'Firebase Live: westroute-b0550' : 'Offline Mode'}
+            {isFirebaseLive ? 'Firebase Live: wasteroute-d393c' : 'Offline Mode'}
           </span>
         </div>
 

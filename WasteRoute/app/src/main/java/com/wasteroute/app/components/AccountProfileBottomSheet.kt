@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,10 +39,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.model.UserRole
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.ElectricBlue400
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.model.UserRole
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.ElectricBlue400
+import com.wasteroute.app.theme.Emerald400
 
 @Suppress("FunctionName")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,6 +56,7 @@ fun AccountProfileBottomSheet(
     workerId: String? = null,
     workZone: String? = null,
     onSeedTestData: (() -> Unit)? = null,
+    seedTestDataLabel: String = "Load test bins (mock bins only)",
     sheetState: SheetState = rememberModalBottomSheetState(),
     modifier: Modifier = Modifier
 ) {
@@ -286,7 +287,7 @@ fun AccountProfileBottomSheet(
                         .border(1.dp, Color(0xFF38BDF8).copy(alpha = 0.4f), RoundedCornerShape(12.dp))
                 ) {
                     Text(
-                        text = "Load test bins (mock bins only)",
+                        text = seedTestDataLabel,
                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     )
                 }

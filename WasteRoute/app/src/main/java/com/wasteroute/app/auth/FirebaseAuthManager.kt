@@ -1,4 +1,4 @@
-package com.westeroute.app.auth
+package com.wasteroute.app.auth
 
 import android.content.Context
 import android.util.Log
@@ -23,10 +23,10 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.westeroute.app.BuildConfig
-import com.westeroute.app.model.AuthProvider
-import com.westeroute.app.model.CitizenAuthSession
-import com.westeroute.app.model.CitizenUser
+import com.wasteroute.app.BuildConfig
+import com.wasteroute.app.model.AuthProvider
+import com.wasteroute.app.model.CitizenAuthSession
+import com.wasteroute.app.model.CitizenUser
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -330,33 +330,57 @@ object FirebaseAuthManager {
                 )
             }
 
+            // The worker ID comes from the account, never from what was typed: a typo (for example the letter O
+            // for a zero) must not create a second worker record. Prefer the record registered for this email.
+            val emailKey = verifiedEmail.substringBefore("@").uppercase()
+            val registeredIds = runCatching {
+                com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                    .collection("workers").whereEqualTo("email", verifiedEmail).get().await()
+                    .documents.map { it.id }
+            }.getOrDefault(emptyList())
+            val canonicalWorkerId = registeredIds.firstOrNull { it.equals(emailKey, ignoreCase = true) }
+                ?: registeredIds.firstOrNull()
+                ?: emailKey
+            if (!canonicalWorkerId.equals(cleanWorkerId, ignoreCase = true)) {
+                Log.w(TAG, "Typed worker ID $cleanWorkerId differs from account ID $canonicalWorkerId; using the account ID.")
+            }
+
             val resolvedName = firebaseUser.displayName?.ifBlank { null }
-                ?: cleanWorkerId.let { "Worker $it" }
+                ?: canonicalWorkerId.let { "Worker $it" }
 
             // Save persistent worker session
             UserSessionManager.saveWorkerSession(
                 context = context,
-                workerId = cleanWorkerId,
+                workerId = canonicalWorkerId,
                 workerName = resolvedName,
                 workerEmail = cleanEmail
             )
 
             // Self-heal: guarantee the Supervisor portal can list this worker
-            com.westeroute.app.firebase.CollectionRepository.ensureWorkerRecord(
-                workerId = cleanWorkerId,
+            com.wasteroute.app.firebase.CollectionRepository.ensureWorkerRecord(
+                workerId = canonicalWorkerId,
                 displayName = resolvedName.substringBefore(" (").trim(),
                 email = verifiedEmail
             )
 
-            Log.d(TAG, "Worker successfully authenticated via Firebase: $cleanWorkerId ($cleanEmail)")
-            Result.success(Pair(cleanWorkerId, resolvedName))
+            Log.d(TAG, "Worker successfully authenticated via Firebase: $canonicalWorkerId ($cleanEmail)")
+            Result.success(Pair(canonicalWorkerId, resolvedName))
         } catch (e: Exception) {
             Log.e(TAG, "Worker Firebase sign-in failed for $cleanEmail", e)
             val mapped = when (e) {
                 is FirebaseAuthInvalidUserException,
-                is FirebaseAuthInvalidCredentialsException -> Exception(
-                    "Worker account not registered or incorrect password. Only workers provisioned by a supervisor in the Supervisor Portal can log in."
-                )
+                is FirebaseAuthInvalidCredentialsException -> {
+                    // Firebase gives the same error for a wrong password and for an unknown account, so look the
+                    // email up in the worker registry to tell the worker which one it really is.
+                    val registered = runCatching {
+                        !com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                            .collection("workers").whereEqualTo("email", cleanEmail).limit(1).get().await().isEmpty
+                    }.getOrDefault(false)
+                    Exception(
+                        if (registered) "This worker is registered, but the password is incorrect. Check the password or ask your supervisor to reset it."
+                        else "No worker is registered with this email. Ask your supervisor to register you in the Supervisor Portal."
+                    )
+                }
                 is FirebaseAuthWeakPasswordException -> Exception("Password is too weak. Please use at least 6 characters.")
                 is FirebaseAuthException -> Exception(e.localizedMessage ?: "Worker authentication error (${e.errorCode})")
                 else -> Exception(e.localizedMessage ?: "Worker authentication failed. Please check your internet connection.")

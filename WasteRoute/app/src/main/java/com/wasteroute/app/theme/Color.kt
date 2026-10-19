@@ -1,4 +1,4 @@
-package com.westeroute.app.theme
+package com.wasteroute.app.theme
 
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color

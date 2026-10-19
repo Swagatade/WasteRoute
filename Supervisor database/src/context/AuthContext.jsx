@@ -11,7 +11,7 @@ import { auth, isFirebaseConfigValid } from '../firebase/config';
 const AuthContext = createContext(null);
 
 const REQUIRED_SUPERVISOR_DOMAIN = import.meta.env.VITE_SUPERVISOR_ALLOWED_DOMAIN || '@supervisor.in';
-const STORAGE_KEY = 'westroute_supervisor_session';
+const STORAGE_KEY = 'wasteroute_supervisor_session';
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);

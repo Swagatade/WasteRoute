@@ -1,18 +1,18 @@
-package com.westeroute.app
+package com.wasteroute.app
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.westeroute.app.components.AppBackground
-import com.westeroute.app.navigation.AppNavigation
-import com.westeroute.app.theme.WesteRouteTheme
+import com.wasteroute.app.components.AppBackground
+import com.wasteroute.app.navigation.AppNavigation
+import com.wasteroute.app.theme.WasteRouteTheme
 
 @Composable
-fun WesteRouteApp() {
+fun WasteRouteApp() {
     val darkTheme = isSystemInDarkTheme()
 
-    WesteRouteTheme(
+    WasteRouteTheme(
         darkTheme = darkTheme,
         premiumMode = true
     ) {

@@ -1,7 +1,7 @@
-package com.westeroute.app.model
+package com.wasteroute.app.model
 
 /**
- * User roles available in WesteRoute.
+ * User roles available in WasteRoute.
  */
 enum class UserRole(
     val title: String,

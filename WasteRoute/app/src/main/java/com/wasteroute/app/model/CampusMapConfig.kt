@@ -1,8 +1,9 @@
-package com.westeroute.app.model
+package com.wasteroute.app.model
 
-import com.westeroute.app.components.BinStatus
-import com.westeroute.app.firebase.LiveComplaint
-import com.westeroute.app.firebase.LiveWorker
+import com.wasteroute.app.components.BinStatus
+import com.wasteroute.app.firebase.LiveComplaint
+import com.wasteroute.app.firebase.LiveHousehold
+import com.wasteroute.app.firebase.LiveWorker
 
 data class CampusSmartBin(
     val id: String,
@@ -67,6 +68,8 @@ object CampusMapConfig {
         bins: List<CampusSmartBin> = SRM_KTR_BINS,
         complaints: List<LiveComplaint> = emptyList(),
         workers: List<LiveWorker> = emptyList(),
+        /** Homes to pin. Workers get their area's homes, a resident only their own; never every home. */
+        households: List<LiveHousehold> = emptyList(),
         isDark: Boolean = true
     ): String {
         val targetLat = destinationLat ?: routeToBin?.lat
@@ -121,6 +124,26 @@ object CampusMapConfig {
             append("]")
         }
 
+        val todayStr = com.wasteroute.app.firebase.CollectionRepository.todayString()
+        val householdsJson = buildString {
+            append("[")
+            households.forEachIndexed { i, h ->
+                append("{")
+                append("\"code\":\"${js(h.code)}\",")
+                append("\"name\":\"${js(h.name.ifBlank { h.code })}\",")
+                append("\"address\":\"${js(h.address)}\",")
+                append("\"area\":\"${js(h.areaName)}\",")
+                append("\"lat\":${h.lat},")
+                append("\"lng\":${h.lng},")
+                append("\"girls\":${h.areaId == "ward-ktr-06"},")
+                append("\"done\":${h.collectedToday(todayStr)},")
+                append("\"by\":\"${js(h.collectedByName)}\"")
+                append("}")
+                if (i < households.size - 1) append(",")
+            }
+            append("]")
+        }
+
         val routeJson = if (targetLat != null && targetLng != null) {
             "[[${userLat}, ${userLng}], [${targetLat}, ${targetLng}]]"
         } else "null"
@@ -159,6 +182,13 @@ object CampusMapConfig {
             font-size: 10.5px; font-weight: 800; color: #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.6);
             cursor: pointer;
         }
+
+        .home-pin {
+            width: 30px; height: 30px; border-radius: 10px; border: 2px solid #FFFFFF;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6); cursor: pointer;
+        }
+        .home-pin svg { width: 17px; height: 17px; stroke: #FFFFFF; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
         .cmp-pin {
             width: 32px; height: 32px; border-radius: 10px; border: 2px solid #FFFFFF;
@@ -208,12 +238,20 @@ object CampusMapConfig {
 
     <!-- Interactive Leaflet Map Layer (Mounted dynamically on top) -->
     <div id="leaflet-map"></div>
+    <div id="hostel-legend" style="display:none;position:absolute;left:8px;top:8px;z-index:6;background:rgba(15,23,42,0.88);color:#F8FAFC;font-size:11px;font-weight:700;padding:7px 9px;border-radius:10px;line-height:1.7;">
+        <div><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#2563EB;border:2px solid #fff;vertical-align:-2px"></span> Men's (Boys)</div>
+        <div><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#EC4899;border:2px solid #fff;vertical-align:-2px"></span> Women's (Girls)</div>
+        <div><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#64748B;border:3px solid #22C55E;vertical-align:-2px"></span> Collected today</div>
+    </div>
     <div id="map-status" style="position:absolute;left:0;right:0;bottom:8px;text-align:center;z-index:5;font-size:11px;color:#94A3B8;">Loading map...</div>
 
     <script>
         var binsData = $binsJson;
         var complaintsData = $complaintsJson;
         var workersData = $workersJson;
+        var householdsData = $householdsJson;
+        // Names / addresses come from Firestore: never let them inject markup into a popup.
+        function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function(c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
         var userCoords = [$userLat, $userLng];
         var isDarkMode = $isDark;
         var userMarker = null, routeLine = null, routeTarget = ${if (targetLat != null && targetLng != null) "[$targetLat, $targetLng]" else "null"};
@@ -329,6 +367,18 @@ object CampusMapConfig {
                     ctx.stroke();
                 });
 
+                // Home pins (green = collected today, amber = still to collect)
+                householdsData.forEach(function(hh) {
+                    var pos = gpsToCanvas(hh.lat, hh.lng, w, h);
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, 11, 0, Math.PI * 2);
+                    ctx.fillStyle = hh.girls ? '#EC4899' : '#2563EB';
+                    ctx.fill();
+                    ctx.lineWidth = hh.done ? 4 : 2;
+                    ctx.strokeStyle = hh.done ? '#22C55E' : '#FFFFFF';
+                    ctx.stroke();
+                });
+
                 // Complaints Pins
                 complaintsData.forEach(function(c) {
                     var pos = gpsToCanvas(c.lat, c.lng, w, h);
@@ -361,6 +411,7 @@ object CampusMapConfig {
 
         drawInstantCampusMap();
         window.addEventListener('resize', drawInstantCampusMap);
+        if (householdsData.length) { var lg = document.getElementById('hostel-legend'); if (lg) lg.style.display = 'block'; }
 
         // Robust Leaflet initialization
         function initInteractiveLeaflet() {
@@ -434,10 +485,31 @@ object CampusMapConfig {
                         else window.focusBin(b.lat, b.lng);
                     });
                     m.bindPopup(
-                        '<div class="popup-title">' + b.code + '</div>' +
-                        '<b>' + b.name + '</b><br/>' +
-                        '<span style="color: #94A3B8;">' + b.zone + '</span><br/>' +
-                        '<div class="popup-badge" style="background:' + color + '22; color:' + color + ';">' + b.type + '</div>'
+                        '<div class="popup-title">' + esc(b.code) + '</div>' +
+                        '<b>' + esc(b.name) + '</b><br/>' +
+                        '<span style="color: #94A3B8;">' + esc(b.zone) + '</span><br/>' +
+                        '<div class="popup-badge" style="background:' + color + '22; color:' + color + ';">' + esc(b.type) + '</div>'
+                    );
+                });
+
+                // Homes: green + tick once today's garbage is collected, amber while waiting
+                householdsData.forEach(function(hh) {
+                    // Men's (boys) = blue, women's (girls) = pink; a green ring + tick means collected today
+                    var hc = hh.girls ? '#EC4899' : '#2563EB';
+                    var ring = hh.done ? '#22C55E' : '#FFFFFF';
+                    var glyph = hh.done ? '<path d="M20 6 9 17l-5-5"/>' : '<path d="M3 11l9-8 9 8M5 10v10h14V10"/>';
+                    var hicon = L.divIcon({
+                        className: '',
+                        html: '<div class="home-pin" style="background:' + hc + ';border-color:' + ring + ';border-width:' + (hh.done ? 4 : 2) + 'px;"><svg viewBox="0 0 24 24">' + glyph + '</svg></div>',
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    });
+                    L.marker([hh.lat, hh.lng], { icon: hicon }).addTo(map).bindPopup(
+                        '<div class="popup-title" style="color:' + hc + ';">' + esc(hh.code) + '</div>' +
+                        '<b>' + esc(hh.name) + '</b><br/>' +
+                        '<span style="color: #94A3B8;">' + esc(hh.address || hh.area) + '</span><br/>' +
+                        '<div class="popup-badge" style="background:' + hc + '22; color:' + hc + ';">' +
+                        (hh.girls ? "Women's (Girls) hostel \u00b7 " : "Men's (Boys) hostel \u00b7 ") + (hh.done ? 'Collected today' + (hh.by ? ' \u00b7 ' + esc(hh.by) : '') : 'Waiting for collection') + '</div>'
                     );
                 });
 
@@ -452,10 +524,10 @@ object CampusMapConfig {
                     });
                     var m = L.marker([c.lat, c.lng], { icon: icon }).addTo(map);
                     m.bindPopup(
-                        '<div class="popup-title" style="color:' + color + ';">' + c.ticketNo + ' (' + c.priority + ')</div>' +
-                        '<b>' + c.category + '</b><br/>' +
-                        '<span style="color: #94A3B8;">' + c.location + '</span><br/>' +
-                        '<div class="popup-badge" style="background:' + color + '22; color:' + color + ';">Status: ' + c.status + '</div>'
+                        '<div class="popup-title" style="color:' + color + ';">' + esc(c.ticketNo) + ' (' + esc(c.priority) + ')</div>' +
+                        '<b>' + esc(c.category) + '</b><br/>' +
+                        '<span style="color: #94A3B8;">' + esc(c.location) + '</span><br/>' +
+                        '<div class="popup-badge" style="background:' + color + '22; color:' + color + ';">Status: ' + esc(c.status) + '</div>'
                     );
                 });
 
@@ -470,9 +542,9 @@ object CampusMapConfig {
                     var m = L.marker([w.lat, w.lng], { icon: icon }).addTo(map);
                     workerMarkers[wi] = m;
                     m.bindPopup(
-                        '<div class="popup-title" style="color: #38BDF8;">' + w.name + '</div>' +
-                        '<b>' + w.vehicle + '</b><br/>' +
-                        '<div class="popup-badge" style="background: rgba(56, 189, 248, 0.2); color: #38BDF8;">' + w.status + '</div>'
+                        '<div class="popup-title" style="color: #38BDF8;">' + esc(w.name) + '</div>' +
+                        '<b>' + esc(w.vehicle) + '</b><br/>' +
+                        '<div class="popup-badge" style="background: rgba(56, 189, 248, 0.2); color: #38BDF8;">' + esc(w.status) + '</div>'
                     );
                 });
 

@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
@@ -43,17 +43,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Cyan500
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.theme.Emerald500
-import com.westeroute.app.theme.LocalPremiumMode
-import com.westeroute.app.theme.NeutralGray400
-import com.westeroute.app.theme.NeutralGray500
-import com.westeroute.app.theme.NeutralGray600
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Cyan500
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.theme.Emerald500
+import com.wasteroute.app.theme.LocalPremiumMode
+import com.wasteroute.app.theme.NeutralGray400
+import com.wasteroute.app.theme.NeutralGray500
+import com.wasteroute.app.theme.NeutralGray600
 
 @Composable
-fun WesteRouteTextField(
+fun WasteRouteTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,

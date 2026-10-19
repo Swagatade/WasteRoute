@@ -1,4 +1,4 @@
-package com.westeroute.app.navigation
+package com.wasteroute.app.navigation
 
 sealed class Screen(val route: String) {
     object RoleSelection : Screen("role_selection")
@@ -14,7 +14,6 @@ sealed class Screen(val route: String) {
     object WorkerTaskDetail : Screen("worker_task_detail/{taskId}") {
         fun createRoute(taskId: String) = "worker_task_detail/$taskId"
     }
-    object WorkerRoute : Screen("worker_route")
     object WorkerQr : Screen("worker_qr")
     object WorkerNotifications : Screen("worker_notifications")
     object WorkerProfile : Screen("worker_profile")

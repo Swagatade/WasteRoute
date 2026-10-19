@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import android.graphics.Bitmap
 import android.graphics.Color as AColor

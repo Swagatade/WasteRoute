@@ -1,4 +1,4 @@
-package com.westeroute.app.screens
+package com.wasteroute.app.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -67,24 +67,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.westeroute.app.auth.FirebaseAuthManager
-import com.westeroute.app.auth.NoGoogleAccountException
-import com.westeroute.app.auth.UserCancelledException
-import com.westeroute.app.auth.UserSessionManager
-import com.westeroute.app.components.GlassCard
-import com.westeroute.app.components.PasswordField
-import com.westeroute.app.components.PrimaryButton
-import com.westeroute.app.components.SocialAuthButton
-import com.westeroute.app.components.SocialProvider
-import com.westeroute.app.components.WesteRouteLogo
-import com.westeroute.app.components.WesteRouteTextField
-import com.westeroute.app.model.CitizenAuthSession
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.theme.Emerald500
-import com.westeroute.app.theme.NeutralGray400
-import com.westeroute.app.theme.NeutralGray500
-import com.westeroute.app.theme.NeutralGray600
+import com.wasteroute.app.auth.FirebaseAuthManager
+import com.wasteroute.app.auth.NoGoogleAccountException
+import com.wasteroute.app.auth.UserCancelledException
+import com.wasteroute.app.auth.UserSessionManager
+import com.wasteroute.app.components.GlassCard
+import com.wasteroute.app.components.PasswordField
+import com.wasteroute.app.components.PrimaryButton
+import com.wasteroute.app.components.SocialAuthButton
+import com.wasteroute.app.components.SocialProvider
+import com.wasteroute.app.components.WasteRouteLogo
+import com.wasteroute.app.components.WasteRouteTextField
+import com.wasteroute.app.model.CitizenAuthSession
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.theme.Emerald500
+import com.wasteroute.app.theme.NeutralGray400
+import com.wasteroute.app.theme.NeutralGray500
+import com.wasteroute.app.theme.NeutralGray600
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -302,7 +302,7 @@ fun CitizenRegisterScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            WesteRouteLogo(
+                            WasteRouteLogo(
                                 size = 36.dp,
                                 showGlow = false
                             )
@@ -357,7 +357,7 @@ fun CitizenRegisterScreen(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Text(
-                            text = "Join WesteRoute to keep your city clean.",
+                            text = "Join WasteRoute to keep your city clean.",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.Medium
                             ),
@@ -479,7 +479,7 @@ fun CitizenRegisterScreen(
                         Spacer(modifier = Modifier.height(18.dp))
 
                         // Input 1: Full Name
-                        WesteRouteTextField(
+                        WasteRouteTextField(
                             value = fullName,
                             onValueChange = {
                                 fullName = it
@@ -495,7 +495,7 @@ fun CitizenRegisterScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // Input 2: Email Address
-                        WesteRouteTextField(
+                        WasteRouteTextField(
                             value = email,
                             onValueChange = {
                                 email = it
@@ -514,7 +514,7 @@ fun CitizenRegisterScreen(
                         Spacer(modifier = Modifier.height(12.dp))
 
                         // Input 3: Mobile Number (Optional)
-                        WesteRouteTextField(
+                        WasteRouteTextField(
                             value = phoneNumber,
                             onValueChange = { phoneNumber = it },
                             placeholder = "Mobile number (optional)",

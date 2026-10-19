@@ -118,7 +118,7 @@ export default function LoginView() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 800 }}>WestRoute</h1>
+            <h1 style={{ fontSize: '24px', fontWeight: 800 }}>WasteRoute</h1>
             <span style={{
               background: 'rgba(16, 185, 129, 0.15)',
               color: '#34D399',
@@ -342,7 +342,7 @@ export default function LoginView() {
           fontSize: '10.5px',
           color: 'var(--text-muted)'
         }}>
-          <span>Firebase Project: <strong style={{ color: '#E2E8F0' }}>westroute-b0550</strong></span>
+          <span>Firebase Project: <strong style={{ color: '#E2E8F0' }}>wasteroute-d393c</strong></span>
           <span style={{ color: isFirebaseLive ? '#34D399' : '#F59E0B' }}>
             {isFirebaseLive ? '● Live SDK Active' : '● Local Mode'}
           </span>

@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.westeroute.app.theme.LocalGlassStyle
+import com.wasteroute.app.theme.LocalGlassStyle
 
 @Composable
 fun GlassCard(

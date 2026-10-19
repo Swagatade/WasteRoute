@@ -1,4 +1,4 @@
-package com.westeroute.app.screens
+package com.wasteroute.app.screens
 
 import com.journeyapps.barcodescanner.CaptureActivity
 

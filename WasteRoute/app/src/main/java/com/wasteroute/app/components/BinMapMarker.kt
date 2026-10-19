@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

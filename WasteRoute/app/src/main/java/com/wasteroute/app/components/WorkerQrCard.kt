@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,9 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.model.UiPerformanceMode
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.model.UiPerformanceMode
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
 
 @Composable
 fun WorkerQrCard(
@@ -121,7 +121,7 @@ fun WorkerQrCard(
                     contentAlignment = Alignment.Center
                 ) {
                     QrCodeImage(
-                        content = com.westeroute.app.firebase.WorkerQrPayload.encode(workerId),
+                        content = com.wasteroute.app.firebase.WorkerQrPayload.encode(workerId),
                         size = 94.dp
                     )
                 }

@@ -1,4 +1,4 @@
-package com.westeroute.app.location
+package com.wasteroute.app.location
 
 import android.Manifest
 import android.annotation.SuppressLint

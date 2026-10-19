@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -80,11 +80,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowCompat
-import com.westeroute.app.firebase.FirebaseDataRepository
-import com.westeroute.app.model.CampusMapConfig
-import com.westeroute.app.model.CampusSmartBin
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.firebase.FirebaseDataRepository
+import com.wasteroute.app.model.CampusMapConfig
+import com.wasteroute.app.model.CampusSmartBin
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
 
 data class CampusPoi(
     val name: String,
@@ -108,9 +108,13 @@ private val CAMPUS_POIS = listOf(
 fun CampusOpenStreetMapDialog(
     initialSelectedBin: CampusSmartBin? = null,
     /** Complaint pins to show (null = every complaint). Citizens/workers pass only their own. */
-    complaints: List<com.westeroute.app.firebase.LiveComplaint>? = null,
+    complaints: List<com.wasteroute.app.firebase.LiveComplaint>? = null,
     /** Truck / called-worker markers to show (null = every worker). */
-    workers: List<com.westeroute.app.firebase.LiveWorker>? = null,
+    workers: List<com.wasteroute.app.firebase.LiveWorker>? = null,
+    /** Homes to pin (a worker's area, or a resident's own home). Empty = no home pins. */
+    households: List<com.wasteroute.app.firebase.LiveHousehold> = emptyList(),
+    /** When set, the map centres on this block and selects/draws the nearest bin to it (not to the phone's GPS). */
+    focusHome: com.wasteroute.app.firebase.LiveHousehold? = null,
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
@@ -137,8 +141,11 @@ fun CampusOpenStreetMapDialog(
         )
     }
     val selectedBin = pickedBin?.let { p -> liveBins.firstOrNull { it.code == p.code } ?: p }
+        ?: focusHome?.let { h -> liveBins.minByOrNull { distanceMeters(h.lat, h.lng, it.lat, it.lng) } }
         ?: userLoc?.let { u -> liveBins.minByOrNull { distanceMeters(u.first, u.second, it.lat, it.lng) } }
         ?: liveBins.firstOrNull() ?: CampusMapConfig.EMPTY_BIN
+    // Distances are measured from the block when it is the focus, otherwise from the phone's GPS
+    val refPoint = focusHome?.let { it.lat to it.lng } ?: userLoc
     val liveBinsNow by rememberUpdatedState(liveBins)
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -303,31 +310,47 @@ fun CampusOpenStreetMapDialog(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
+                // Nearest bin to the focused block
+                if (focusHome != null && selectedBin.id != "NONE") {
+                    Text(
+                        text = "${focusHome.name.ifBlank { focusHome.code }} - nearest bin: ${selectedBin.name} (${formatDistance(distanceMeters(focusHome.lat, focusHome.lng, selectedBin.lat, selectedBin.lng))})",
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isDark) Emerald400 else Color(0xFF059669)
+                    )
+                }
+
                 // Interactive OpenStreetMap Leaflet View
                 // Rebuilt only when pins appear/change status; truck positions move through JS (below)
                 val cachedDialogHtml = remember(
                     liveBins,
                     shownComplaints.map { it.id to it.status },
                     shownWorkers.map { it.id to it.status },
+                    households.map { it.id to it.collectedDate },
+                    focusHome?.id,
                     isDark
                 ) {
                     CampusMapConfig.buildOpenStreetMapHtml(
                         complaints = shownComplaints,
                         workers = shownWorkers,
-                        centerLat = selectedBin.lat,
-                        centerLng = selectedBin.lng,
+                        centerLat = focusHome?.lat ?: selectedBin.lat,
+                        centerLng = focusHome?.lng ?: selectedBin.lng,
                         zoom = 17,
-                        userLat = userLoc?.first ?: CampusMapConfig.CAMPUS_LAT,
-                        userLng = userLoc?.second ?: CampusMapConfig.CAMPUS_LNG,
-                        showUserMarker = true,
+                        // With a focus block the line is drawn block -> nearest bin, from the block's own position
+                        userLat = focusHome?.lat ?: userLoc?.first ?: CampusMapConfig.CAMPUS_LAT,
+                        userLng = focusHome?.lng ?: userLoc?.second ?: CampusMapConfig.CAMPUS_LNG,
+                        showUserMarker = focusHome == null,
                         routeToBin = selectedBin,
                         bins = liveBins,
+                        households = households,
                         isDark = isDark
                     )
                 }
 
                 // Push every new real GPS fix into the page
                 LaunchedEffect(userLoc, webViewRef, cachedDialogHtml) {
+                    if (focusHome != null) return@LaunchedEffect
                     val loc = userLoc ?: return@LaunchedEffect
                     delay(400)
                     webViewRef?.pushUserLocation(loc.first, loc.second)
@@ -486,8 +509,8 @@ fun CampusOpenStreetMapDialog(
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
-                                        text = userLoc?.let { formatDistance(distanceMeters(it.first, it.second, bin.lat, bin.lng)) }
-                                            ?: bin.distanceDisplay,
+                                        text = refPoint?.let { formatDistance(distanceMeters(it.first, it.second, bin.lat, bin.lng)) }
+                                            ?: bin.distanceDisplay.ifBlank { "--" },
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Medium,
                                         color = Cyan400
@@ -589,8 +612,8 @@ fun CampusOpenStreetMapDialog(
                                         color = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)
                                     )
                                     Text(
-                                        text = userLoc?.let { "${formatDistance(distanceMeters(it.first, it.second, selectedBin.lat, selectedBin.lng))} away" }
-                                            ?: "Distance: ${selectedBin.distanceDisplay}",
+                                        text = refPoint?.let { "${formatDistance(distanceMeters(it.first, it.second, selectedBin.lat, selectedBin.lng))} ${if (focusHome != null) "from your block" else "away"}" }
+                                            ?: "Distance: ${selectedBin.distanceDisplay.ifBlank { "--" }}",
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Medium,
                                         color = Cyan400

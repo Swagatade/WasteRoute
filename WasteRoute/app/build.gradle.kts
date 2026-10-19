@@ -18,11 +18,11 @@ if (envFile != null && envFile.exists()) {
 }
 
 android {
-    namespace = "com.westeroute.app"
+    namespace = "com.wasteroute.app"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.westeroute.app"
+        applicationId = "com.wasteroute.app"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

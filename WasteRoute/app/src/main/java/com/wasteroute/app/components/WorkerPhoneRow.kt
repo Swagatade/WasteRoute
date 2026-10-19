@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import android.content.Intent
 import android.net.Uri
@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Cyan400
 
 /** Worker mobile number line; tapping opens the dialer. Shows nothing's-on-file text when [phone] is blank. */
 @Composable

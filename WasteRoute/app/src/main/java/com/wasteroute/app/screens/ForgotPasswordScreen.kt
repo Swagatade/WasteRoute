@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package com.westeroute.app.screens
+package com.wasteroute.app.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -77,20 +77,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.westeroute.app.components.GlassCard
-import com.westeroute.app.components.PasswordField
-import com.westeroute.app.components.PrimaryButton
-import com.westeroute.app.components.WesteRouteLogo
-import com.westeroute.app.components.WesteRouteTextField
-import com.westeroute.app.model.UserRole
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.ElectricBlue400
-import com.westeroute.app.theme.ElectricBlue500
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.theme.Emerald500
-import com.westeroute.app.theme.NeutralGray400
-import com.westeroute.app.theme.NeutralGray500
-import com.westeroute.app.theme.NeutralGray600
+import com.wasteroute.app.components.GlassCard
+import com.wasteroute.app.components.PasswordField
+import com.wasteroute.app.components.PrimaryButton
+import com.wasteroute.app.components.WasteRouteLogo
+import com.wasteroute.app.components.WasteRouteTextField
+import com.wasteroute.app.model.UserRole
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.ElectricBlue400
+import com.wasteroute.app.theme.ElectricBlue500
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.theme.Emerald500
+import com.wasteroute.app.theme.NeutralGray400
+import com.wasteroute.app.theme.NeutralGray500
+import com.wasteroute.app.theme.NeutralGray600
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
@@ -250,7 +250,7 @@ fun ForgotPasswordScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            WesteRouteLogo(
+                            WasteRouteLogo(
                                 size = 36.dp,
                                 showGlow = false
                             )
@@ -506,7 +506,7 @@ private fun RequestEmailStep(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Email Text Field
-        WesteRouteTextField(
+        WasteRouteTextField(
             value = email,
             onValueChange = onEmailChange,
             placeholder = "Enter registered email",
@@ -866,7 +866,7 @@ private fun ResetPasswordStep(
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
-            text = "Create a strong new password for your WesteRoute account.",
+            text = "Create a strong new password for your WasteRoute account.",
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Medium
             ),
@@ -1019,7 +1019,7 @@ private fun SuccessStep(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Your password has been updated securely. You can now sign in to your WesteRoute account with your new credentials.",
+            text = "Your password has been updated securely. You can now sign in to your WasteRoute account with your new credentials.",
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Normal
             ),

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   WesteRoute — Interactive Application Logic & Hardware-Accelerated Navigation
+   WasteRoute — Interactive Application Logic & Hardware-Accelerated Navigation
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Global methods for inline handlers
-  window.westeRouteGoBack = (e) => {
+  window.wasteRouteGoBack = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, e, 260);
   };
 
-  window.westeRouteShowCitizen = (e) => {
+  window.wasteRouteShowCitizen = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, e, 300);
   };
 
-  window.westeRouteShowCitizenRegister = (e) => {
+  window.wasteRouteShowCitizenRegister = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, e, 260);
   };
 
-  window.westeRouteShowWorker = (e) => {
+  window.wasteRouteShowWorker = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, e, 300);
   };
 
-  window.westeRouteShowCitizenDashboard = (e) => {
+  window.wasteRouteShowCitizenDashboard = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   // Citizen Dashboard Interactions
   // ==========================================
-  window.westeRouteSelectNavTab = (tabName) => {
+  window.wasteRouteSelectNavTab = (tabName) => {
     const tabs = ['home', 'complaints', 'map', 'profile'];
     tabs.forEach(t => {
       const tabEl = document.getElementById(`tab-${t}`);
@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.westeRouteTriggerReport = (e) => {
+  window.wasteRouteTriggerReport = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, e, 250);
   };
 
-  window.westeRouteToggleAiTooltip = (e) => {
+  window.wasteRouteToggleAiTooltip = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.westeRouteSelectBin = (name, dist, status, color) => {
+  window.wasteRouteSelectBin = (name, dist, status, color) => {
     const popover = document.getElementById('bin-detail-popover');
     const nameEl = document.getElementById('popover-name');
     const subEl = document.getElementById('popover-sub');
@@ -345,22 +345,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.westeRouteOpenQrScanner = () => {
+  window.wasteRouteOpenQrScanner = () => {
     alert('▦ Household Doorstep Collection QR Scanner\n\nScan your municipal sanitation worker\'s badge QR code to confirm daily service.');
   };
 
-  window.westeRouteShowComplaintsModal = () => {
-    window.westeRouteSelectNavTab('complaints');
+  window.wasteRouteShowComplaintsModal = () => {
+    window.wasteRouteSelectNavTab('complaints');
   };
 
-  window.westeRouteFocusMap = () => {
-    window.westeRouteSelectNavTab('map');
+  window.wasteRouteFocusMap = () => {
+    window.wasteRouteSelectNavTab('map');
   };
 
   // ==========================================
   // Forgot Password Flow Controller
   // ==========================================
-  window.westeRouteShowForgotPassword = (role = 'citizen', e) => {
+  window.wasteRouteShowForgotPassword = (role = 'citizen', e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -397,12 +397,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      window.westeRouteForgotSetStep(1);
+      window.wasteRouteForgotSetStep(1);
       showScreen(screenForgotPassword, 'forward');
     }, e, 260);
   };
 
-  window.westeRouteForgotGoBack = (e) => {
+  window.wasteRouteForgotGoBack = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -410,9 +410,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = e ? (e.currentTarget || e.target.closest('button, a, .back-btn')) : null;
     triggerTactileAction(target, () => {
       if (currentForgotStep === 2) {
-        window.westeRouteForgotSetStep(1);
+        window.wasteRouteForgotSetStep(1);
       } else if (currentForgotStep === 3) {
-        window.westeRouteForgotSetStep(2);
+        window.wasteRouteForgotSetStep(2);
       } else {
         if (currentForgotRole === 'worker') {
           showScreen(screenWorker, 'backward');
@@ -423,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, e, 260);
   };
 
-  window.westeRouteForgotSetStep = (step, e) => {
+  window.wasteRouteForgotSetStep = (step, e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
   };
 
-  window.westeRouteResendOtp = (e) => {
+  window.wasteRouteResendOtp = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -482,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, e, 240);
   };
 
-  window.westeRouteHandleForgotStep1 = (e) => {
+  window.wasteRouteHandleForgotStep1 = (e) => {
     if (e) e.preventDefault();
     const btn = document.getElementById('btn-forgot-send-code');
     const emailVal = forgotEmailInput ? forgotEmailInput.value.trim() : '';
@@ -496,13 +496,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     handleSlowButtonAction(btn, '<span>Send Verification Code</span>', 'Sending code...', 'Code Sent!', () => {
       if (forgotDisplayEmail) forgotDisplayEmail.textContent = emailVal;
-      window.westeRouteForgotSetStep(2);
+      window.wasteRouteForgotSetStep(2);
       startOtpTimer();
       if (otpDigits[0]) setTimeout(() => otpDigits[0].focus(), 150);
     });
   };
 
-  window.westeRouteHandleForgotStep2 = (e) => {
+  window.wasteRouteHandleForgotStep2 = (e) => {
     if (e) e.preventDefault();
     const btn = document.getElementById('btn-forgot-verify-code');
     const code = otpDigits.map(d => d ? d.value : '').join('');
@@ -513,11 +513,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (forgotOtpError) forgotOtpError.textContent = '';
 
     handleSlowButtonAction(btn, '<span>Verify Code</span>', 'Verifying code...', 'Verified!', () => {
-      window.westeRouteForgotSetStep(3);
+      window.wasteRouteForgotSetStep(3);
     });
   };
 
-  window.westeRouteCheckPwdStrength = (val) => {
+  window.wasteRouteCheckPwdStrength = (val) => {
     const strengthContainer = document.getElementById('forgot-strength-container');
     const strengthLabel = document.getElementById('forgot-strength-label');
     const strengthFill = document.getElementById('forgot-strength-fill');
@@ -553,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.westeRouteHandleForgotStep3 = (e) => {
+  window.wasteRouteHandleForgotStep3 = (e) => {
     if (e) e.preventDefault();
     const btn = document.getElementById('btn-forgot-reset-pwd');
     const newPwd = forgotNewPwdInput ? forgotNewPwdInput.value : '';
@@ -570,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (forgotPwdError) forgotPwdError.textContent = '';
 
     handleSlowButtonAction(btn, '<span>Reset Password</span>', 'Resetting password...', 'Password Reset!', () => {
-      window.westeRouteForgotSetStep(4);
+      window.wasteRouteForgotSetStep(4);
     });
   };
 
@@ -607,13 +607,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Bind role cards, navigation links & back buttons with slow tactile feedback
-  bindTactileTap(cardCitizen, window.westeRouteShowCitizen, 300);
-  bindTactileTap(cardWorker, window.westeRouteShowWorker, 300);
-  bindTactileTap(btnBackCitizen, window.westeRouteGoBack, 260);
-  bindTactileTap(btnBackCitizenRegister, window.westeRouteShowCitizen, 260);
-  bindTactileTap(btnBackWorker, window.westeRouteGoBack, 260);
-  bindTactileTap(btnGotoCitizenRegister, window.westeRouteShowCitizenRegister, 260);
-  bindTactileTap(btnGotoCitizenLogin, window.westeRouteShowCitizen, 260);
+  bindTactileTap(cardCitizen, window.wasteRouteShowCitizen, 300);
+  bindTactileTap(cardWorker, window.wasteRouteShowWorker, 300);
+  bindTactileTap(btnBackCitizen, window.wasteRouteGoBack, 260);
+  bindTactileTap(btnBackCitizenRegister, window.wasteRouteShowCitizen, 260);
+  bindTactileTap(btnBackWorker, window.wasteRouteGoBack, 260);
+  bindTactileTap(btnGotoCitizenRegister, window.wasteRouteShowCitizenRegister, 260);
+  bindTactileTap(btnGotoCitizenLogin, window.wasteRouteShowCitizen, 260);
 
   // Submit buttons tactile binding with automatic navigation to Citizen Dashboard!
   const submitCitizen = document.getElementById('btn-submit-citizen');
@@ -807,20 +807,20 @@ document.addEventListener('DOMContentLoaded', () => {
         'Access Granted!',
         () => {
           showScreen(screenWorkerDashboard, 'forward');
-          window.westeRouteInitWorkerData();
+          window.wasteRouteInitWorkerData();
         }
       );
     });
   }
 
   if (submitForgotSuccess) {
-    bindTactileTap(submitForgotSuccess, window.westeRouteForgotGoBack, 280);
+    bindTactileTap(submitForgotSuccess, window.wasteRouteForgotGoBack, 280);
   }
 
   // ==========================================
   // Theme Switching with Persistence
   // ==========================================
-  const savedTheme = localStorage.getItem('westeroute_theme') || 'dark';
+  const savedTheme = localStorage.getItem('wasteroute_theme') || 'dark';
   htmlRoot.setAttribute('data-theme', savedTheme);
 
   const toggleTheme = (e) => {
@@ -830,7 +830,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
       htmlRoot.setAttribute('data-theme', nextTheme);
       try {
-        localStorage.setItem('westeroute_theme', nextTheme);
+        localStorage.setItem('wasteroute_theme', nextTheme);
       } catch (err) {}
     }, e, 200);
   };
@@ -942,11 +942,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  window.westeRouteInitWorkerData = () => {
-    window.westeRouteFilterTasks('all');
+  window.wasteRouteInitWorkerData = () => {
+    window.wasteRouteFilterTasks('all');
   };
 
-  window.westeRouteToggleDuty = () => {
+  window.wasteRouteToggleDuty = () => {
     isWorkerOnDuty = !isWorkerOnDuty;
     const btnDuty = document.getElementById('btn-duty-toggle');
     const txtDuty = document.getElementById('duty-text');
@@ -967,15 +967,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.westeRouteEndShift = () => {
+  window.wasteRouteEndShift = () => {
     if (confirm('Are you sure you want to end your shift for today? Your remaining tasks will be handed over to dispatch.')) {
       isWorkerOnDuty = false;
-      window.westeRouteToggleDuty();
+      window.wasteRouteToggleDuty();
       alert('Shift ended. Thank you for keeping SRMIST campus clean!');
     }
   };
 
-  window.westeRouteOpenStatusSheet = () => {
+  window.wasteRouteOpenStatusSheet = () => {
     if (!isWorkerOnDuty) {
       alert('You are currently OFF DUTY. Please switch to ON DUTY to update task status.');
       return;
@@ -984,12 +984,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modal) modal.classList.remove('hidden');
   };
 
-  window.westeRouteCloseStatusSheet = () => {
+  window.wasteRouteCloseStatusSheet = () => {
     const modal = document.getElementById('modal-task-status');
     if (modal) modal.classList.add('hidden');
   };
 
-  window.westeRouteSelectStatus = (status) => {
+  window.wasteRouteSelectStatus = (status) => {
     currentTaskStatus = status;
     const statusChip = document.getElementById('current-task-status-chip');
     const stepCleaning = document.getElementById('step-row-cleaning');
@@ -1020,10 +1020,10 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    window.westeRouteCloseStatusSheet();
+    window.wasteRouteCloseStatusSheet();
   };
 
-  window.westeRouteToggleProofPhoto = (type) => {
+  window.wasteRouteToggleProofPhoto = (type) => {
     if (type === 'before') {
       isProofBeforeAdded = !isProofBeforeAdded;
       const box = document.getElementById('box-proof-before');
@@ -1053,7 +1053,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (checkingEl) checkingEl.classList.add('hidden');
           if (verifiedEl) verifiedEl.classList.remove('hidden');
           isAiVerified = true;
-          window.westeRouteCheckProofCompletion();
+          window.wasteRouteCheckProofCompletion();
         }, 1400);
       } else {
         if (checkingEl) checkingEl.classList.add('hidden');
@@ -1061,10 +1061,10 @@ document.addEventListener('DOMContentLoaded', () => {
         isAiVerified = false;
       }
     }
-    window.westeRouteCheckProofCompletion();
+    window.wasteRouteCheckProofCompletion();
   };
 
-  window.westeRouteCheckProofCompletion = () => {
+  window.wasteRouteCheckProofCompletion = () => {
     const btn = document.getElementById('btn-mark-task-completed');
     const msg = document.getElementById('proof-guide-msg');
     const canComplete = isProofBeforeAdded && isProofAfterAdded && isAiVerified;
@@ -1077,16 +1077,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.westeRouteCompleteTaskFromProof = () => {
-    window.westeRouteSelectStatus('COMPLETED');
+  window.wasteRouteCompleteTaskFromProof = () => {
+    window.wasteRouteSelectStatus('COMPLETED');
     alert('🎉 Task #WR-2048 marked as completed! Points awarded to Rahul Kumar.');
   };
 
-  window.westeRouteNavigateGps = () => {
+  window.wasteRouteNavigateGps = () => {
     alert('📍 Starting GPS Navigation to SRMIST Main Gate, Kattankulathur (450 m away). Turn left toward Grand Southern Trunk (GST) Road.');
   };
 
-  window.westeRouteFilterTasks = (filter, btn) => {
+  window.wasteRouteFilterTasks = (filter, btn) => {
     if (btn) {
       document.querySelectorAll('.task-filter-chips .filter-chip').forEach(c => c.classList.remove('active'));
       btn.classList.add('active');
@@ -1130,18 +1130,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   };
 
-  window.westeRouteOpenFullScreenQr = () => {
+  window.wasteRouteOpenFullScreenQr = () => {
     const modal = document.getElementById('modal-worker-qr');
     if (modal) modal.classList.remove('hidden');
   };
 
-  window.westeRouteCloseFullScreenQr = () => {
+  window.wasteRouteCloseFullScreenQr = () => {
     const modal = document.getElementById('modal-worker-qr');
     if (modal) modal.classList.add('hidden');
   };
 
   let isHighBrightness = false;
-  window.westeRouteToggleBrightness = () => {
+  window.wasteRouteToggleBrightness = () => {
     isHighBrightness = !isHighBrightness;
     const card = document.getElementById('full-qr-card-box');
     const btn = document.getElementById('btn-toggle-brightness');
@@ -1154,7 +1154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.westeRouteToggleOffline = (show) => {
+  window.wasteRouteToggleOffline = (show) => {
     const banner = document.getElementById('worker-offline-banner');
     if (banner) {
       if (show) banner.classList.remove('hidden');
@@ -1162,7 +1162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  window.westeRouteSelectWorkerNav = (tab) => {
+  window.wasteRouteSelectWorkerNav = (tab) => {
     document.querySelectorAll('.worker-bottom-nav .nav-tab').forEach(t => t.classList.remove('active'));
     const tabEl = document.getElementById(`worker-tab-${tab}`);
     if (tabEl) tabEl.classList.add('active');
@@ -1177,13 +1177,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const sec = document.querySelector('.route-timeline-card');
       if (sec) sec.scrollIntoView({ behavior: 'smooth' });
     } else if (tab === 'qr') {
-      window.westeRouteOpenFullScreenQr();
+      window.wasteRouteOpenFullScreenQr();
     } else if (tab === 'profile') {
       alert('Worker Profile:\nRahul Kumar (WR-W-204)\nRole: Waste Collection Worker\nZone: SRM University Campus\nLocation: SRMIST, Kattankulathur\nVehicle Unit: EV-Tipper #TN-19-KTR-402');
     }
   };
 
-  window.westeRouteFocusWorkerNotif = () => {
+  window.wasteRouteFocusWorkerNotif = () => {
     const notifCard = document.querySelector('.worker-notif-card');
     if (notifCard) notifCard.scrollIntoView({ behavior: 'smooth' });
   };

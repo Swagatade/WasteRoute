@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -51,10 +51,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.westeroute.app.model.UiPerformanceMode
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.theme.Emerald500
+import com.wasteroute.app.model.UiPerformanceMode
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.theme.Emerald500
 
 @Composable
 fun CleaningProofCard(

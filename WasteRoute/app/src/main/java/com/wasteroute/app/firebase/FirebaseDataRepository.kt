@@ -1,12 +1,12 @@
-package com.westeroute.app.firebase
+package com.wasteroute.app.firebase
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.SetOptions
-import com.westeroute.app.components.BinStatus
-import com.westeroute.app.model.CampusMapConfig
-import com.westeroute.app.model.CampusSmartBin
+import com.wasteroute.app.components.BinStatus
+import com.wasteroute.app.model.CampusMapConfig
+import com.wasteroute.app.model.CampusSmartBin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,11 +66,13 @@ data class LiveWorker(
     val lng: Double = 80.0442,
     val wardName: String = "",
     val phone: String = "",
+    /** Areas (household zones) the supervisor assigned to this worker. */
+    val assignedAreaIds: List<String> = emptyList(),
     val isMock: Boolean = false
 )
 
 /**
- * Shared Realtime Repository connected directly to Firestore (westroute-b0550).
+ * Shared Realtime Repository connected directly to Firestore (wasteroute-d393c).
  * Synchronizes Smart Bins, Complaints, and Workers seamlessly between Android and Web Supervisor.
  */
 object FirebaseDataRepository {
@@ -122,7 +124,7 @@ object FirebaseDataRepository {
                         Log.w(TAG, "Smart bins listener notice: ${error.message}")
                         return@addSnapshotListener
                     }
-                    if (snapshot != null && !snapshot.isEmpty) {
+                    if (snapshot != null) {
                         val parsedBins = snapshot.documents.mapNotNull { doc ->
                             val id = doc.id
                             val code = doc.getString("code") ?: id
@@ -130,7 +132,7 @@ object FirebaseDataRepository {
                             val zone = doc.getString("wardName") ?: doc.getString("zone") ?: "SRM KTR Campus"
                             val fillLevel = (doc.getLong("fillLevel") ?: 50L).toInt()
                             val type = doc.getString("type") ?: "Mixed Solid Waste"
-                            val distanceDisplay = doc.getString("distance") ?: "250 m"
+                            val distanceDisplay = doc.getString("distance") ?: ""
                             
                             val coordsMap = doc.get("coordinates") as? Map<*, *>
                             val lat = (coordsMap?.get("lat") as? Number)?.toDouble() 
@@ -157,9 +159,8 @@ object FirebaseDataRepository {
                                 status = status
                             )
                         }
-                        if (parsedBins.isNotEmpty()) {
-                            _smartBins.value = parsedBins
-                        }
+                        // Always mirror the server, even an empty list: a deleted bin must leave the map.
+                        _smartBins.value = parsedBins
                     }
                 }
         } catch (e: Exception) {
@@ -175,7 +176,7 @@ object FirebaseDataRepository {
                         Log.w(TAG, "Complaints listener notice: ${error.message}")
                         return@addSnapshotListener
                     }
-                    if (snapshot != null && !snapshot.isEmpty) {
+                    if (snapshot != null) {
                         val parsedComplaints = snapshot.documents.mapNotNull { doc ->
                             if (doc.getBoolean("isMock") == true) return@mapNotNull null
                             val coordsMap = doc.get("coordinates") as? Map<*, *>
@@ -232,9 +233,7 @@ object FirebaseDataRepository {
                                 hiddenFor = (doc.get("hiddenFor") as? List<*>)?.mapNotNull { it?.toString() } ?: emptyList()
                             )
                         }.sortedByDescending { it.createdAtMs }
-                        if (parsedComplaints.isNotEmpty()) {
-                            _complaints.value = parsedComplaints
-                        }
+                        _complaints.value = parsedComplaints
                     }
                 }
         } catch (e: Exception) {
@@ -250,7 +249,7 @@ object FirebaseDataRepository {
                         Log.w(TAG, "Workers listener notice: ${error.message}")
                         return@addSnapshotListener
                     }
-                    if (snapshot != null && !snapshot.isEmpty) {
+                    if (snapshot != null) {
                         val parsedWorkers = snapshot.documents.mapNotNull { doc ->
                             if (doc.getBoolean("isMock") == true) return@mapNotNull null
                             val coordsMap = doc.get("currentLocation") as? Map<*, *>
@@ -268,12 +267,11 @@ object FirebaseDataRepository {
                                 lng = lng,
                                 wardName = doc.getString("wardName") ?: "",
                                 phone = (doc.getString("phone") ?: doc.getString("mobile") ?: doc.getString("phoneNumber") ?: "").trim(),
+                                assignedAreaIds = (doc.get("assignedAreaIds") as? List<*>)?.mapNotNull { it?.toString() } ?: emptyList(),
                                 isMock = doc.getBoolean("isMock") ?: false
                             )
                         }
-                        if (parsedWorkers.isNotEmpty()) {
-                            _workers.value = parsedWorkers
-                        }
+                        _workers.value = parsedWorkers
                     }
                 }
         } catch (e: Exception) {
@@ -296,7 +294,7 @@ object FirebaseDataRepository {
     fun nearbyWorkers(lat: Double, lng: Double, radiusM: Double = 5000.0): List<LiveWorker> {
         val eligible = _workers.value
             .filter { !it.isMock && !it.status.equals("Off Duty", true) && !it.status.equals("Offline", true) }
-            .map { it to com.westeroute.app.location.LocationHelper.distanceM(lat, lng, it.lat, it.lng) }
+            .map { it to com.wasteroute.app.location.LocationHelper.distanceM(lat, lng, it.lat, it.lng) }
             .sortedBy { it.second }
         val inRadius = eligible.filter { it.second <= radiusM }
         return (if (inRadius.isNotEmpty()) inRadius else eligible).take(8).map { it.first }

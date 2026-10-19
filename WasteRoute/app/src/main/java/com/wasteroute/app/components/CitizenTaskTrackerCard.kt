@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,12 +37,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.firebase.LiveComplaint
-import com.westeroute.app.firebase.TaskStage
-import com.westeroute.app.location.LocationHelper
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.util.ImageUtil
+import com.wasteroute.app.firebase.LiveComplaint
+import com.wasteroute.app.firebase.TaskStage
+import com.wasteroute.app.location.LocationHelper
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.util.ImageUtil
 
 private val STEP_LABELS = listOf("Reported", "Accepted", "On the way", "Arrived", "Solved")
 
@@ -141,10 +141,10 @@ fun CitizenTaskTrackerCard(
                 "${task.assignedWorkerName} - ${task.truckName.ifBlank { "Truck" }}",
                 fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = textSub
             )
-            val liveWorkers by com.westeroute.app.firebase.FirebaseDataRepository.workers.collectAsState()
+            val liveWorkers by com.wasteroute.app.firebase.FirebaseDataRepository.workers.collectAsState()
             WorkerPhoneRow(
                 phone = remember(liveWorkers, task.assignedWorkerId, task.assignedWorkerName) {
-                    com.westeroute.app.firebase.FirebaseDataRepository.workerPhone(task.assignedWorkerId, task.assignedWorkerName)
+                    com.wasteroute.app.firebase.FirebaseDataRepository.workerPhone(task.assignedWorkerId, task.assignedWorkerName)
                 }
             )
         }

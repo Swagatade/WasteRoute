@@ -5,7 +5,7 @@ import { upsertWorkerInFirestore } from "./firestoreService";
 import { firebaseConfig, db, isFirebaseConfigValid } from "./config";
 
 export const REQUIRED_WORKER_DOMAIN = "@worker.in";
-const STORAGE_KEY_WORKERS = "westroute_registered_workers";
+const STORAGE_KEY_WORKERS = "wasteroute_registered_workers";
 
 /**
  * Validates if an email address belongs to the official @worker.in municipal domain.

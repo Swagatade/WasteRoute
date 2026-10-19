@@ -1,4 +1,4 @@
-package com.westeroute.app.notify
+package com.wasteroute.app.notify
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -12,9 +12,9 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.westeroute.app.auth.UserSessionManager
-import com.westeroute.app.firebase.FirebaseDataRepository
-import com.westeroute.app.firebase.TaskStage
+import com.wasteroute.app.auth.UserSessionManager
+import com.wasteroute.app.firebase.FirebaseDataRepository
+import com.wasteroute.app.firebase.TaskStage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -52,7 +52,7 @@ class WorkerAlertService : Service() {
                             it.notifiedWorkerIds.any { id -> id.equals(workerId, ignoreCase = true) } ||
                             (me != null && it.stage == TaskStage.REPORTED && it.assignedWorkerId.isNullOrBlank() &&
                                 !it.ticketNo.startsWith("#WR-MOCK") &&
-                                com.westeroute.app.location.LocationHelper.distanceM(me.lat, me.lng, it.lat, it.lng) <= 5000.0)
+                                com.wasteroute.app.location.LocationHelper.distanceM(me.lat, me.lng, it.lat, it.lng) <= 5000.0)
                     }
                     val fresh = incoming.filter { it.id !in alerted }
                     if (fresh.isNotEmpty()) {
@@ -83,7 +83,7 @@ class WorkerAlertService : Service() {
         }
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL)
             .setSmallIcon(android.R.drawable.ic_menu_mylocation)
-            .setContentTitle("WestRoute - you are online")
+            .setContentTitle("WasteRoute - you are online")
             .setContentText("You will be called when garbage is reported near you.")
             .setOngoing(true)
             .setContentIntent(open)

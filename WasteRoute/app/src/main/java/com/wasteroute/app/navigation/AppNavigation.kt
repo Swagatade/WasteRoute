@@ -1,4 +1,4 @@
-package com.westeroute.app.navigation
+package com.wasteroute.app.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
@@ -14,13 +14,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.westeroute.app.auth.UserSessionManager
-import com.westeroute.app.model.UserRole
-import com.westeroute.app.screens.CitizenLoginScreen
-import com.westeroute.app.screens.CitizenRegisterScreen
-import com.westeroute.app.screens.ForgotPasswordScreen
-import com.westeroute.app.screens.RoleSelectionScreen
-import com.westeroute.app.screens.WorkerLoginScreen
+import com.wasteroute.app.auth.UserSessionManager
+import com.wasteroute.app.model.UserRole
+import com.wasteroute.app.screens.CitizenLoginScreen
+import com.wasteroute.app.screens.CitizenRegisterScreen
+import com.wasteroute.app.screens.ForgotPasswordScreen
+import com.wasteroute.app.screens.RoleSelectionScreen
+import com.wasteroute.app.screens.WorkerLoginScreen
 
 @Suppress("FunctionName", "ModifierParameterPosition")
 @Composable
@@ -36,8 +36,8 @@ fun AppNavigation(
     }
 
     val onSignOutAction: () -> Unit = {
-        com.westeroute.app.firebase.CollectionRepository.stopListening()
-        com.westeroute.app.notify.WorkerAlertService.stop(context)
+        com.wasteroute.app.firebase.CollectionRepository.stopListening()
+        com.wasteroute.app.notify.WorkerAlertService.stop(context)
         UserSessionManager.clearSession(context)
         navController.navigate(Screen.RoleSelection.route) {
             popUpTo(0) { inclusive = true }
@@ -224,8 +224,8 @@ fun AppNavigation(
                 slideIntoExit(AnimatedContentTransitionScope.SlideDirection.Right) + fadeOut(animationSpec = tween(300))
             }
         ) {
-            val citizenName = com.westeroute.app.model.CitizenAuthSession.currentUser?.name ?: "Citizen"
-            com.westeroute.app.screens.CitizenDashboardScreen(
+            val citizenName = com.wasteroute.app.model.CitizenAuthSession.currentUser?.name ?: "Citizen"
+            com.wasteroute.app.screens.CitizenDashboardScreen(
                 userName = citizenName,
                 location = "SRM KTR, Kattankulathur",
                 onNavigateToReportWaste = {
@@ -261,22 +261,22 @@ fun AppNavigation(
             }
             androidx.compose.runtime.LaunchedEffect(savedWorkerId) {
                 if (savedWorkerId.isNotBlank()) {
-                    com.westeroute.app.firebase.CollectionRepository.ensureWorkerRecord(
+                    com.wasteroute.app.firebase.CollectionRepository.ensureWorkerRecord(
                         savedWorkerId,
                         savedWorkerName.substringBefore(" (").trim(),
                         UserSessionManager.getSavedWorkerEmail(context)
                     )
-                    com.westeroute.app.firebase.CollectionRepository.listenToWorkerSchedule(savedWorkerId)
+                    com.wasteroute.app.firebase.CollectionRepository.listenToWorkerSchedule(savedWorkerId)
                 }
             }
             val workerProfile = remember(savedWorkerId, savedWorkerName) {
-                com.westeroute.app.model.WorkerProfile(
+                com.wasteroute.app.model.WorkerProfile(
                     id = savedWorkerId,
                     name = savedWorkerName
                 )
             }
 
-            com.westeroute.app.screens.WorkerDashboardScreen(
+            com.wasteroute.app.screens.WorkerDashboardScreen(
                 profile = workerProfile,
                 onNavigateToQr = {
                     navController.navigate(Screen.WorkerQr.route)
@@ -285,9 +285,8 @@ fun AppNavigation(
                     // Task detail action
                 },
                 onNavigateToTasks = {},
-                onNavigateToRoute = {
-                    navController.navigate(Screen.WorkerRoute.route)
-                },
+                // The Route tab only opens the map on the dashboard itself.
+                onNavigateToRoute = {},
                 onNavigateToNotifications = {},
                 onNavigateToProfile = {},
                 onSignOut = onSignOutAction
@@ -313,31 +312,11 @@ fun AppNavigation(
             val (qrWorkerId, qrWorkerName) = remember {
                 UserSessionManager.getSavedWorkerDetails(context)
             }
-            com.westeroute.app.screens.WorkerQrScreen(
-                profile = com.westeroute.app.model.WorkerProfile(id = qrWorkerId, name = qrWorkerName),
+            com.wasteroute.app.screens.WorkerQrScreen(
+                profile = com.wasteroute.app.model.WorkerProfile(id = qrWorkerId, name = qrWorkerName),
                 onNavigateBack = {
                     navController.popBackStack()
                 }
-            )
-        }
-
-        // Step 7: Worker timetable + department map
-        composable(
-            route = Screen.WorkerRoute.route,
-            enterTransition = {
-                slideIntoEntry(AnimatedContentTransitionScope.SlideDirection.Up) + fadeIn(animationSpec = tween(280))
-            },
-            popExitTransition = {
-                slideIntoExit(AnimatedContentTransitionScope.SlideDirection.Down) + fadeOut(animationSpec = tween(280))
-            }
-        ) {
-            val (routeWorkerId, routeWorkerName) = remember {
-                UserSessionManager.getSavedWorkerDetails(context)
-            }
-            com.westeroute.app.screens.WorkerTimetableScreen(
-                workerId = routeWorkerId,
-                workerName = routeWorkerName,
-                onNavigateBack = { navController.popBackStack() }
             )
         }
     }

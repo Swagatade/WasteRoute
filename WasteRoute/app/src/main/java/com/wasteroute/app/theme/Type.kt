@@ -1,4 +1,4 @@
-package com.westeroute.app.theme
+package com.wasteroute.app.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.R
+import com.wasteroute.app.R
 
 /**
  * Plus Jakarta Sans — premium geometric sans-serif font that matches

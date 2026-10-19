@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -45,14 +45,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.model.UserRole
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Cyan500
-import com.westeroute.app.theme.ElectricBlue400
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.theme.Emerald500
-import com.westeroute.app.theme.Emerald600
-import com.westeroute.app.theme.LocalGlassStyle
+import com.wasteroute.app.model.UserRole
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Cyan500
+import com.wasteroute.app.theme.ElectricBlue400
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.theme.Emerald500
+import com.wasteroute.app.theme.Emerald600
+import com.wasteroute.app.theme.LocalGlassStyle
 
 @Composable
 fun RoleCard(

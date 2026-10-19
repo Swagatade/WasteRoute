@@ -3,7 +3,7 @@
     <!-- Branded cold-start background so the window never shows a blank white flash -->
     <color name="splash_bg">#070B14</color>
 
-    <style name="Theme.WesteRoute" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.WasteRoute" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@color/splash_bg</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>

@@ -1,4 +1,4 @@
-package com.westeroute.app
+package com.wasteroute.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            WesteRouteApp()
+            WasteRouteApp()
         }
     }
 }

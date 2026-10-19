@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WesteRoute"
+rootProject.name = "WasteRoute"
 include(":app")

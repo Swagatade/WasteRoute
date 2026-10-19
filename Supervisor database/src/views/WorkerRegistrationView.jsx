@@ -179,7 +179,7 @@ export default function WorkerRegistrationView({
 
   const handleCopyCredentials = () => {
     if (!successData) return;
-    const credsText = `WestRoute Municipal Worker Access Credentials:\nWorker ID: ${successData.id}\nEmail: ${successData.email}\nPassword: ${successData.plainPassword}\nAssigned Vehicle: ${successData.vehicle}\nDomain: ${REQUIRED_WORKER_DOMAIN}\nMobile App: WestRoute Android (Worker Portal)`;
+    const credsText = `WasteRoute Municipal Worker Access Credentials:\nWorker ID: ${successData.id}\nEmail: ${successData.email}\nPassword: ${successData.plainPassword}\nAssigned Vehicle: ${successData.vehicle}\nDomain: ${REQUIRED_WORKER_DOMAIN}\nMobile App: WasteRoute Android (Worker Portal)`;
     navigator.clipboard.writeText(credsText).then(() => {
       setCopiedKey(true);
       setTimeout(() => setCopiedKey(false), 3000);
@@ -220,7 +220,7 @@ export default function WorkerRegistrationView({
               <h2 style={{ fontSize: '22px', fontWeight: 800 }}>Worker Registration & Credential Provisioning</h2>
             </div>
             <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)', maxWidth: '780px' }}>
-              Register municipal field staff and sanitation crew credentials. Only verified workers with official <strong style={{ color: 'var(--cyan-400)' }}>{REQUIRED_WORKER_DOMAIN}</strong> accounts provisioned here can log into the WestRoute Android application.
+              Register municipal field staff and sanitation crew credentials. Only verified workers with official <strong style={{ color: 'var(--cyan-400)' }}>{REQUIRED_WORKER_DOMAIN}</strong> accounts provisioned here can log into the WasteRoute Android application.
             </p>
           </div>
 

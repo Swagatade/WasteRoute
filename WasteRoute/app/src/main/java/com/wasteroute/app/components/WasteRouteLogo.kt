@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -30,16 +30,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.westeroute.app.R
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.theme.LocalPremiumMode
+import com.wasteroute.app.R
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.theme.LocalPremiumMode
 import kotlinx.coroutines.delay
 
 private const val LOGO_GLOW_DELAY_MILLIS = 480L
 
 @Composable
-fun WesteRouteLogo(
+fun WasteRouteLogo(
     modifier: Modifier = Modifier,
     size: Dp = 72.dp,
     showGlow: Boolean = true
@@ -135,8 +135,8 @@ fun WesteRouteLogo(
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.westeroute_logo),
-                contentDescription = "WesteRoute Logo",
+                painter = painterResource(id = R.drawable.wasteroute_logo),
+                contentDescription = "WasteRoute Logo",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(size)

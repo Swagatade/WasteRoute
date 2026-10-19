@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,8 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.model.UiPerformanceMode
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.model.UiPerformanceMode
+import com.wasteroute.app.theme.Emerald400
 
 data class CompletedTaskItem(
     val title: String,

@@ -1,4 +1,4 @@
-package com.westeroute.app.notify
+package com.wasteroute.app.notify
 
 import android.Manifest
 import android.app.NotificationChannel

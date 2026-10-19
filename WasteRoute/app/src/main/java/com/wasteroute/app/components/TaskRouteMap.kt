@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -23,9 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.westeroute.app.firebase.LiveComplaint
-import com.westeroute.app.firebase.TaskStage
-import com.westeroute.app.model.CampusMapConfig
+import com.wasteroute.app.firebase.LiveComplaint
+import com.wasteroute.app.firebase.TaskStage
+import com.wasteroute.app.model.CampusMapConfig
 import kotlinx.coroutines.delay
 
 /**

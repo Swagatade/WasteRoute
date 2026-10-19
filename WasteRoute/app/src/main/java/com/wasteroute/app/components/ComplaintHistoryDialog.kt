@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,11 +43,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowCompat
-import com.westeroute.app.firebase.LiveComplaint
-import com.westeroute.app.firebase.TaskStage
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.util.ImageUtil
+import com.wasteroute.app.firebase.LiveComplaint
+import com.wasteroute.app.firebase.TaskStage
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.util.ImageUtil
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -8,7 +8,8 @@ import ComplaintsView from './views/ComplaintsView';
 import WorkersView from './views/WorkersView';
 import WorkerRegistrationView from './views/WorkerRegistrationView';
 import MapView from './views/MapView';
-import SchedulesView from './views/SchedulesView';
+import RoutesView from './views/RoutesView';
+import HouseholdsView from './views/HouseholdsView';
 import ReportsView from './views/ReportsView';
 import { 
   INITIAL_COMPLAINTS, 
@@ -25,6 +26,11 @@ import {
   subscribeToScheduleTemplates,
   ensureDailySchedules,
   subscribeToCollectionLogs,
+  subscribeToHouseholds,
+  addHostelBlock,
+  seedCampusBins,
+  subscribeToZones,
+  seedZones,
   upsertWorkerInFirestore,
   updateComplaintStatusInFirestore,
   assignWorkerToComplaintInFirestore,
@@ -45,7 +51,7 @@ function DashboardLayout() {
       const cleanCached = cached.filter(w => !mockIds.has(w.id));
       if (cleanCached.length !== cached.length) {
         try {
-          localStorage.setItem('westroute_registered_workers', JSON.stringify(cleanCached));
+          localStorage.setItem('wasteroute_registered_workers', JSON.stringify(cleanCached));
         } catch (e) {
           console.warn('Storage sync notice:', e);
         }
@@ -60,6 +66,10 @@ function DashboardLayout() {
   const [templates, setTemplates] = useState([]);
   const [dayTick, setDayTick] = useState(0);
   const [collectionLogs, setCollectionLogs] = useState([]);
+  const [households, setHouseholds] = useState([]);
+  const [householdsLoaded, setHouseholdsLoaded] = useState(false);
+  const [householdsError, setHouseholdsError] = useState(null);
+  const [zones, setZones] = useState([]);
   const [activeTab, setActiveTab] = useState('overview');
 
   const [selectedWard, setSelectedWard] = useState('all');
@@ -77,9 +87,14 @@ function DashboardLayout() {
       setComplaints((liveComplaints || []).filter((c) => c.reporterUid && !c.isMock));
     });
 
+    let seededBins = false;
     const unsubBins = subscribeToSmartBins((liveBins) => {
       if (liveBins && liveBins.length > 0) {
         setBins(liveBins);
+      } else if (!seededBins) {
+        // Empty collection: put the campus bin points into Firestore (the map then updates live)
+        seededBins = true;
+        seedCampusBins().catch((e) => console.warn('Campus bins seed notice:', e?.message || e));
       }
     });
 
@@ -101,11 +116,27 @@ function DashboardLayout() {
     });
     const unsubTemplates = subscribeToScheduleTemplates(setTemplates);
     const unsubLogs = subscribeToCollectionLogs(setCollectionLogs);
+    let seededZones = false;
+    const unsubZones = subscribeToZones((list) => {
+      setZones(list);
+      if (list.length === 0 && !seededZones) {
+        seededZones = true;
+        seedZones().catch((e) => console.warn('Zones seed notice:', e?.message || e));
+      }
+    });
+    const unsubHouseholds = subscribeToHouseholds((list) => {
+      setHouseholds(list);
+      setHouseholdsLoaded(true);
+      setHouseholdsError(null);
+      // hostel blocks are registered from the official SRM hostel list (Areas & Hostels), not auto-seeded
+    }, (err) => setHouseholdsError(err?.code || err?.message || 'error'));
 
     return () => {
       unsubSchedules();
       unsubTemplates();
       unsubLogs();
+      unsubHouseholds();
+      unsubZones();
       unsubComplaints();
       unsubBins();
       unsubWorkers();
@@ -292,14 +323,25 @@ function DashboardLayout() {
             />
           )}
 
-          {activeTab === 'schedules' && (
-            <SchedulesView
+          {activeTab === 'routes' && (
+            <RoutesView
               workers={workers}
               bins={bins}
+              households={households}
               schedules={schedules}
               templates={templates}
               onEnsureSlots={() => ensureDailySchedules(templates, new Set(schedules.map((s) => s.id)))}
-              collectionLogs={collectionLogs}
+            />
+          )}
+
+          {activeTab === 'households' && (
+            <HouseholdsView
+              workers={workers}
+              households={households}
+              zones={zones}
+              loaded={householdsLoaded}
+              loadError={householdsError}
+              supervisorName={currentUser?.displayName}
             />
           )}
 
@@ -317,6 +359,10 @@ function DashboardLayout() {
               bins={bins}
               complaints={complaints}
               workers={workers}
+              schedules={schedules}
+              households={households}
+              zones={zones}
+              onAddHostel={(block) => addHostelBlock(block, households)}
               onSelectComplaint={(cmp) => {
                 setSelectedComplaint(cmp);
                 setActiveTab('complaints');

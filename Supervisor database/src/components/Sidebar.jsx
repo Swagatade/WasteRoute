@@ -11,7 +11,8 @@ import {
   Trash2, 
   HelpCircle,
   Cpu,
-  CalendarClock
+  Route as RouteIcon,
+  Home
 } from 'lucide-react';
 
 export default function Sidebar({ activeTab, onSelectTab, pendingComplaintsCount = 0 }) {
@@ -35,12 +36,18 @@ export default function Sidebar({ activeTab, onSelectTab, pendingComplaintsCount
       badge: null
     },
     { 
-      id: 'schedules', 
-      label: 'Collection Schedule', 
-      icon: CalendarClock,
+      id: 'routes',
+      label: 'Route Planner',
+      icon: RouteIcon,
       badge: null
     },
-    { 
+    {
+      id: 'households',
+      label: 'Areas & Hostels',
+      icon: Home,
+      badge: null
+    },
+    {
       id: 'worker-registration', 
       label: 'Worker Registration', 
       icon: UserPlus,

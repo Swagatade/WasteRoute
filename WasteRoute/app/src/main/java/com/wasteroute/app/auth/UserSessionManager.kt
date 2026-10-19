@@ -1,13 +1,13 @@
-package com.westeroute.app.auth
+package com.wasteroute.app.auth
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import com.westeroute.app.model.AuthProvider
-import com.westeroute.app.model.CitizenAuthSession
-import com.westeroute.app.model.CitizenUser
-import com.westeroute.app.model.UserRole
-import com.westeroute.app.navigation.Screen
+import com.wasteroute.app.model.AuthProvider
+import com.wasteroute.app.model.CitizenAuthSession
+import com.wasteroute.app.model.CitizenUser
+import com.wasteroute.app.model.UserRole
+import com.wasteroute.app.navigation.Screen
 
 private const val TAG = "UserSessionManager"
 
@@ -17,7 +17,7 @@ private const val TAG = "UserSessionManager"
  */
 object UserSessionManager {
 
-    private const val PREFS_NAME = "westeroute_user_session"
+    private const val PREFS_NAME = "wasteroute_user_session"
     private const val KEY_IS_LOGGED_IN = "is_logged_in"
     private const val KEY_USER_ROLE = "user_role"
     private const val KEY_USER_NAME = "user_name"
@@ -27,6 +27,19 @@ object UserSessionManager {
 
     private fun getPrefs(context: Context): SharedPreferences {
         return context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    /** Workers are Firebase users too (provisioned under @worker.in): they must never be treated as citizens. */
+    private fun isWorkerEmail(email: String?): Boolean =
+        email?.trim()?.endsWith(FirebaseAuthManager.REQUIRED_WORKER_DOMAIN, ignoreCase = true) == true
+
+    /** Rebuilds a saved worker session from the live Firebase account (worker id = the part before the @). */
+    private fun healWorkerSession(context: Context, email: String) {
+        val prefs = getPrefs(context)
+        val savedId = prefs.getString(KEY_WORKER_ID, "").orEmpty()
+        val id = savedId.ifBlank { email.substringBefore("@").trim().uppercase() }
+        val name = prefs.getString(KEY_USER_NAME, null)?.takeIf { it.isNotBlank() } ?: "Worker $id"
+        saveWorkerSession(context, id, name, email)
     }
 
     /**
@@ -42,8 +55,9 @@ object UserSessionManager {
         // Direct fallback: check Firebase Auth user
         val firebaseUser = FirebaseAuthManager.getCurrentUser()
         if (firebaseUser != null) {
-            // Self-heal local session preferences
-            saveCitizenSession(context, firebaseUser)
+            // Self-heal local session preferences (as a worker or a citizen, whichever the account is)
+            if (isWorkerEmail(firebaseUser.email)) healWorkerSession(context, firebaseUser.email)
+            else saveCitizenSession(context, firebaseUser)
             return true
         }
 
@@ -64,9 +78,10 @@ object UserSessionManager {
             }
         }
 
-        // Fallback: If Firebase user exists, treat as CITIZEN
-        if (FirebaseAuthManager.getCurrentUser() != null) {
-            return UserRole.CITIZEN
+        // Fallback: a live Firebase account is a WORKER when it is an @worker.in address, otherwise a CITIZEN
+        val live = FirebaseAuthManager.getCurrentUser()
+        if (live != null) {
+            return if (isWorkerEmail(live.email)) UserRole.WORKER else UserRole.CITIZEN
         }
 
         return null
@@ -120,8 +135,18 @@ object UserSessionManager {
      * Restores the Citizen user session from live Firebase or local storage into [CitizenAuthSession].
      */
     fun restoreSessionIfAvailable(context: Context): CitizenUser? {
-        // Priority 1: Check live Firebase user token
+        // A worker session is never converted into a citizen one (this overwrote the saved WORKER role on the
+        // second app launch and opened the citizen side for a signed-in worker).
+        val savedRole = getPrefs(context).getString(KEY_USER_ROLE, null)
         val liveFirebaseUser = FirebaseAuthManager.getCurrentUser()
+        if (savedRole == UserRole.WORKER.name || isWorkerEmail(liveFirebaseUser?.email)) {
+            if (liveFirebaseUser != null && isWorkerEmail(liveFirebaseUser.email)) {
+                healWorkerSession(context, liveFirebaseUser.email)
+            }
+            return null
+        }
+
+        // Priority 1: Check live Firebase user token
         if (liveFirebaseUser != null) {
             saveCitizenSession(context, liveFirebaseUser)
             return liveFirebaseUser

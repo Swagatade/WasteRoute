@@ -1,4 +1,4 @@
-package com.westeroute.app.screens
+package com.wasteroute.app.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -44,8 +44,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.model.WorkerProfile
-import com.westeroute.app.theme.Cyan400
+import com.wasteroute.app.model.WorkerProfile
+import com.wasteroute.app.theme.Cyan400
 
 @Suppress("FunctionName")
 @Composable
@@ -161,8 +161,8 @@ fun WorkerQrScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    com.westeroute.app.components.QrCodeImage(
-                        content = com.westeroute.app.firebase.WorkerQrPayload.encode(profile.id),
+                    com.wasteroute.app.components.QrCodeImage(
+                        content = com.wasteroute.app.firebase.WorkerQrPayload.encode(profile.id),
                         size = 220.dp
                     )
 

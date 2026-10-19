@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -27,7 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import com.westeroute.app.theme.NeutralGray400
+import com.wasteroute.app.theme.NeutralGray400
 
 @Composable
 fun PasswordField(
@@ -42,7 +42,7 @@ fun PasswordField(
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
-    WesteRouteTextField(
+    WasteRouteTextField(
         value = value,
         onValueChange = onValueChange,
         placeholder = placeholder,

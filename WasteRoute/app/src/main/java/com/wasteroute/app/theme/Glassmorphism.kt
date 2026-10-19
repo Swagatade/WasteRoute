@@ -1,4 +1,4 @@
-package com.westeroute.app.theme
+package com.wasteroute.app.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf

@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import android.annotation.SuppressLint
 import android.webkit.WebChromeClient
@@ -39,7 +39,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
-import com.westeroute.app.location.LocationHelper
+import com.wasteroute.app.location.LocationHelper
 import kotlinx.coroutines.delay
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -57,12 +57,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.westeroute.app.firebase.FirebaseDataRepository
-import com.westeroute.app.model.CampusMapConfig
-import com.westeroute.app.model.CampusSmartBin
-import com.westeroute.app.model.UiPerformanceMode
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.firebase.FirebaseDataRepository
+import com.wasteroute.app.model.CampusMapConfig
+import com.wasteroute.app.model.CampusSmartBin
+import com.wasteroute.app.model.UiPerformanceMode
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable

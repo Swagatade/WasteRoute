@@ -1,5 +1,7 @@
-package com.westeroute.app.firebase
+package com.wasteroute.app.firebase
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -30,9 +32,21 @@ data class LiveSchedule(
     val startTime: String = "",
     val endTime: String = "",
     val status: String = "Scheduled",
-    val notes: String = ""
+    val notes: String = "",
+    val isMock: Boolean = false,
+    val completedAtMs: Long = 0L,
+    val completedBy: String = "",
+    /** Supervisor-built route this stop belongs to (blank for a single ad-hoc slot). */
+    val routeName: String = "",
+    val stopOrder: Int = 0,
+    /** "bin" (cleared with a camera photo) or "household" (confirmed by the resident's QR scan). */
+    val stopType: String = "bin",
+    /** Hostel block (`households` document) this stop visits; blank for a bin stop. */
+    val householdId: String = "",
+    val hasProof: Boolean = false
 ) {
     val isCompleted get() = status.equals("Completed", ignoreCase = true)
+    val isHousehold get() = stopType.equals("household", ignoreCase = true)
 }
 
 /** QR payload shown by the worker and scanned by the citizen. */
@@ -72,6 +86,20 @@ object CollectionRepository {
         val id = workerId.trim().uppercase()
         if (id.isBlank() || id == listeningFor) return
         val firestore = db ?: return
+        // After an app restart the saved worker session can be restored before Firebase Auth is ready;
+        // a listener attached too early is rejected by the rules and would stay dead. Wait for the user.
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser == null) {
+            auth.addAuthStateListener(object : FirebaseAuth.AuthStateListener {
+                override fun onAuthStateChanged(a: FirebaseAuth) {
+                    if (a.currentUser != null) {
+                        a.removeAuthStateListener(this)
+                        listenToWorkerSchedule(id)
+                    }
+                }
+            })
+            return
+        }
         scheduleListener?.remove()
         templateListener?.remove()
         listeningFor = id
@@ -81,6 +109,9 @@ object CollectionRepository {
             .addSnapshotListener { snap, err ->
                 if (err != null) {
                     Log.w(TAG, "Schedule listener: ${err.message}")
+                    // A failed listener never recovers on its own: drop the guard and try again shortly.
+                    listeningFor = null
+                    Handler(Looper.getMainLooper()).postDelayed({ listenToWorkerSchedule(id) }, 4000)
                     return@addSnapshotListener
                 }
                 _workerSchedule.value = snap?.documents?.map { it.toSchedule() }
@@ -131,6 +162,11 @@ object CollectionRepository {
                             "startTime" to t.getString("startTime"),
                             "endTime" to t.getString("endTime"),
                             "notes" to (t.getString("notes") ?: ""),
+                            "routeId" to t.getString("routeId"),
+                            "routeName" to t.getString("routeName"),
+                            "stopOrder" to t.getLong("stopOrder"),
+                            "stopType" to (t.getString("stopType") ?: "bin"),
+                            "householdId" to t.getString("householdId"),
                             "date" to today,
                             "status" to "Scheduled",
                             "createdAt" to FieldValue.serverTimestamp()
@@ -193,7 +229,58 @@ object CollectionRepository {
         }.addOnFailureListener { Log.w(TAG, "ensureWorkerRecord read failed: ${it.message}") }
     }
 
-    /** Worker marks a slot as started. Completion is only possible through the citizen QR scan. */
+    /**
+     * Test-route slots (`isMock`) can be completed by the worker straight from the Current Task card,
+     * since there is no resident to scan the QR. Real slots still complete only through [confirmCollection].
+     */
+    fun completeMockSlot(scheduleId: String, workerId: String, onResult: (Boolean, String) -> Unit) {
+        val firestore = db ?: return onResult(false, "No connection to Firestore.")
+        val batch = firestore.batch()
+        batch.update(
+            firestore.collection(SCHEDULES).document(scheduleId),
+            mapOf(
+                "status" to "Completed",
+                "completedAt" to FieldValue.serverTimestamp(),
+                "completedByCitizenName" to "Test route (self-confirmed)"
+            )
+        )
+        batch.update(firestore.collection(WORKERS).document(workerId.trim().uppercase()), "tasksCompletedToday", FieldValue.increment(1))
+        batch.commit()
+            .addOnSuccessListener { onResult(true, "Stop marked completed.") }
+            .addOnFailureListener { onResult(false, "Could not complete stop: ${it.message}") }
+    }
+
+    /**
+     * Worker clears a bin stop: the camera photo is the proof. Completes the slot, stores the photo (compressed
+     * data URI, same approach as complaint photos) and bumps the worker's counter so every progress bar moves.
+     */
+    fun completeWithPhoto(
+        slot: LiveSchedule,
+        workerId: String,
+        workerName: String,
+        photoDataUri: String,
+        onResult: (Boolean, String) -> Unit
+    ) {
+        val firestore = db ?: return onResult(false, "No connection to Firestore.")
+        if (slot.isHousehold) return onResult(false, "A hostel block is completed when its warden scans your QR code.")
+        val batch = firestore.batch()
+        batch.update(
+            firestore.collection(SCHEDULES).document(slot.id),
+            mapOf(
+                "status" to "Completed",
+                "completedAt" to FieldValue.serverTimestamp(),
+                "completedByCitizenName" to "$workerName (photo proof)",
+                "proofPhoto" to photoDataUri,
+                "proofAtMs" to System.currentTimeMillis()
+            )
+        )
+        batch.update(firestore.collection(WORKERS).document(workerId.trim().uppercase()), "tasksCompletedToday", FieldValue.increment(1))
+        batch.commit()
+            .addOnSuccessListener { onResult(true, "${slot.locationName.ifBlank { "Stop" }} collected. Photo saved.") }
+            .addOnFailureListener { onResult(false, "Could not save the photo proof: ${it.message}") }
+    }
+
+    /** Worker marks a slot as started. Completing a bin stop goes through [completeWithPhoto], a home through the resident's QR scan. */
     fun setScheduleStatus(scheduleId: String, status: String) {
         if (status.equals("Completed", ignoreCase = true)) return
         db?.collection(SCHEDULES)?.document(scheduleId)
@@ -209,11 +296,13 @@ object CollectionRepository {
     fun confirmCollection(
         rawQr: String?,
         citizenName: String,
+        /** Internal: the real `workers` document id once it was found by its stored workerId field. */
+        forcedWorkerId: String? = null,
         onResult: (success: Boolean, message: String) -> Unit
     ) {
-        val workerId = WorkerQrPayload.decode(rawQr)
+        val workerId = forcedWorkerId ?: WorkerQrPayload.decode(rawQr)
         if (workerId == null) {
-            onResult(false, "This is not a WestRoute worker QR code.")
+            onResult(false, "This is not a WasteRoute worker QR code.")
             return
         }
         val firestore = db
@@ -225,7 +314,18 @@ object CollectionRepository {
         val workerRef = firestore.collection(WORKERS).document(workerId)
         workerRef.get().addOnSuccessListener { workerSnap ->
             if (!workerSnap.exists()) {
-                onResult(false, "Worker $workerId is not registered.")
+                if (forcedWorkerId == null) {
+                    // The QR id can differ from the document id (case, spaces): look the worker up by the stored id.
+                    firestore.collection(WORKERS).whereEqualTo("workerId", workerId).limit(1).get()
+                        .addOnSuccessListener { q ->
+                            val found = q.documents.firstOrNull()
+                            if (found != null) confirmCollection(rawQr, citizenName, found.id, onResult)
+                            else onResult(false, "Worker $workerId was not found. Ask the worker to log in once on their phone, then scan again.")
+                        }
+                        .addOnFailureListener { onResult(false, "Could not verify worker: ${it.message}") }
+                } else {
+                    onResult(false, "Worker $workerId was not found.")
+                }
                 return@addOnSuccessListener
             }
             val workerName = workerSnap.getString("name") ?: workerId
@@ -234,19 +334,32 @@ object CollectionRepository {
                   materializeToday(tplTask.result?.documents ?: emptyList()) {
             firestore.collection(SCHEDULES)
                 .whereEqualTo("workerId", workerId)
-                .whereEqualTo("date", todayString())
                 .get()
                 .addOnSuccessListener { q ->
+                    val today = todayString()
+                    // Today's open slots, plus earlier slots that were never completed (overdue).
                     val open = q.documents.map { it.toSchedule() }
-                        .filter { !it.isCompleted }
+                        .filter { !it.isCompleted && it.date <= today }
                         .sortedWith(
-                            compareByDescending<LiveSchedule> { it.status == "In Progress" }
+                            // A scanned QR is a doorstep pickup: homes first, then any other open stop.
+                            compareBy<LiveSchedule> { !it.isHousehold }
+                                .thenByDescending { it.status == "In Progress" }
+                                .thenBy { it.date }
                                 .thenBy { it.startTime }
                         )
                         .firstOrNull()
                     if (open == null) {
-                        onResult(false, "$workerName has no pending collection scheduled for today.")
+                        onResult(false, "$workerName has no pending collection to confirm.")
                         return@addOnSuccessListener
+                    }
+                    // The warden's own hostel block (if linked) turns "collected" on their map too.
+                    HouseholdRepository.homesOf(citizenUid) { homes ->
+                    // A warden who linked their block can only confirm the stop at THEIR block.
+                    if (open.isHousehold && open.householdId.isNotBlank() &&
+                        homes.isNotEmpty() && homes.none { it.id == open.householdId }
+                    ) {
+                        onResult(false, "$workerName is heading to ${open.locationName.ifBlank { "another block" }}, not your block. Scan again when the worker reaches your hostel.")
+                        return@homesOf
                     }
                     val batch = firestore.batch()
                     batch.update(
@@ -273,12 +386,14 @@ object CollectionRepository {
                         )
                     )
                     batch.update(workerRef, "tasksCompletedToday", FieldValue.increment(1))
+                    homes.forEach { batch.update(it.reference, HouseholdRepository.collectedFields(citizenName)) }
                     batch.commit()
                         .addOnSuccessListener {
                             val where = open.locationName.ifBlank { "your location" }
                             onResult(true, "Collection at $where confirmed for $workerName. Thank you!")
                         }
                         .addOnFailureListener { onResult(false, "Could not save confirmation: ${it.message}") }
+                    }
                 }
                 .addOnFailureListener { onResult(false, "Could not load today's schedule: ${it.message}") }
                   }
@@ -298,6 +413,14 @@ object CollectionRepository {
         startTime = getString("startTime") ?: "",
         endTime = getString("endTime") ?: "",
         status = getString("status") ?: "Scheduled",
-        notes = getString("notes") ?: ""
+        notes = getString("notes") ?: "",
+        isMock = getBoolean("isMock") == true,
+        completedAtMs = getTimestamp("completedAt")?.toDate()?.time ?: 0L,
+        completedBy = getString("completedByCitizenName") ?: "",
+        routeName = getString("routeName") ?: "",
+        stopOrder = (getLong("stopOrder") ?: 0L).toInt(),
+        stopType = getString("stopType") ?: "bin",
+        householdId = getString("householdId") ?: "",
+        hasProof = !getString("proofPhoto").isNullOrBlank()
     )
 }

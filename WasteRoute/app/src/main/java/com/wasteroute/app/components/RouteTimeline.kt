@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,9 +33,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.model.UiPerformanceMode
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.model.UiPerformanceMode
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
 
 data class RouteStop(
     val title: String,
@@ -46,58 +47,18 @@ data class RouteStop(
 
 @Composable
 fun RouteTimeline(
-    stopsRemaining: Int = 4,
-    estimatedCompletion: String = "03:40 PM",
+    /** Today's real stops in route order (from the supervisor's route / timetable). */
+    stops: List<RouteStop> = emptyList(),
+    routeName: String = "",
+    estimatedCompletion: String = "--",
     performanceMode: UiPerformanceMode = UiPerformanceMode.PREMIUM,
     modifier: Modifier = Modifier
 ) {
     val isDark = isSystemInDarkTheme()
     val shape = RoundedCornerShape(26.dp)
-
-    val stops = listOf(
-        RouteStop(
-            title = "SRM University Campus",
-            subtitle = "Depot Starting Point",
-            distance = "0 m",
-            isCompleted = true,
-            isCurrent = false
-        ),
-        RouteStop(
-            title = "SRMIST Main Gate",
-            subtitle = "Current Task · #WR-2048",
-            distance = "450 m",
-            isCompleted = false,
-            isCurrent = true
-        ),
-        RouteStop(
-            title = "SRM Tech Park",
-            subtitle = "Next Task · #WR-2050",
-            distance = "850 m",
-            isCompleted = false,
-            isCurrent = false
-        ),
-        RouteStop(
-            title = "SRM Hostel Zone",
-            subtitle = "Assigned Point · #WR-2053",
-            distance = "1.1 km",
-            isCompleted = false,
-            isCurrent = false
-        ),
-        RouteStop(
-            title = "SRM Hospital Area",
-            subtitle = "Community Point · #WR-2057",
-            distance = "1.2 km",
-            isCompleted = false,
-            isCurrent = false
-        ),
-        RouteStop(
-            title = "Potheri Main Road",
-            subtitle = "Urgent Task · #WR-2055",
-            distance = "1.5 km",
-            isCompleted = false,
-            isCurrent = false
-        )
-    )
+    val doneCount = stops.count { it.isCompleted }
+    val stopsRemaining = stops.size - doneCount
+    val progress = if (stops.isEmpty()) 0f else doneCount.toFloat() / stops.size
 
     Column(
         modifier = modifier
@@ -105,7 +66,7 @@ fun RouteTimeline(
             .padding(horizontal = 16.dp)
     ) {
         Text(
-            text = "TODAY'S ROUTE",
+            text = if (routeName.isBlank()) "TODAY'S ROUTE" else "TODAY'S ROUTE - ${routeName.uppercase()}",
             style = MaterialTheme.typography.labelSmall.copy(
                 fontSize = 11.5.sp,
                 fontWeight = FontWeight.Black,
@@ -136,6 +97,47 @@ fun RouteTimeline(
                 .padding(20.dp)
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
+                // Progress bar: fills as each stop is collected (camera photo for bins, QR scan for homes)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "$doneCount of ${stops.size} collected",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 12.5.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = if (isDark) Color.White else Color(0xFF0F172A)
+                        )
+                    )
+                    Text(
+                        text = "${(progress * 100).toInt()}%",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontSize = 12.5.sp,
+                            fontWeight = FontWeight.Black,
+                            color = Emerald400
+                        )
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(9.dp)
+                        .clip(RoundedCornerShape(4.5.dp))
+                        .background(if (isDark) Color(0x33334155) else Color(0x33CBD5E1))
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(progress)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(4.5.dp))
+                            .background(Brush.horizontalGradient(listOf(Cyan400, Emerald400)))
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
                 stops.forEachIndexed { index, stop ->
                     RouteStopRow(
                         stop = stop,

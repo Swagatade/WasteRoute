@@ -1,4 +1,4 @@
-package com.westeroute.app.model
+package com.wasteroute.app.model
 
 /**
  * Supported authentication providers for Citizen users.

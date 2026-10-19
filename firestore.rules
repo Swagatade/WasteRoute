@@ -1,11 +1,14 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Shared by the Android app and the Supervisor web app (project westroute-b0550).
+    // Shared by the Android app and the Supervisor web app (project wasteroute-d393c).
 
     function signedIn() { return request.auth != null; }
     // Worker accounts are provisioned under @worker.in; everyone else is a citizen or supervisor.
     function isWorker() { return signedIn() && request.auth.token.email != null && request.auth.token.email.matches('.*@worker[.]in'); }
+
+    // Supervisor accounts are provisioned under @supervisor.in.
+    function isSupervisor() { return signedIn() && request.auth.token.email != null && request.auth.token.email.matches('.*@supervisor[.]in'); }
 
     // Map data: public read, signed-in write.
     match /smart_bins/{id}  { allow read: if true; allow write: if signedIn(); }
@@ -21,7 +24,14 @@ service cloud.firestore {
       // Supervisors create any slot. A worker's phone may only create the daily slot of an existing
       // routine assigned to that worker (id = "<templateId>_<date>"), always as "Scheduled".
       allow create: if signedIn() && (
-        !isWorker() || (
+        !isWorker() ||
+        // Test route loaded from the worker app (MockDataSeeder.seedTodayRoute): flagged isMock, always "Scheduled".
+        (
+          id.matches('MOCK-.*') &&
+          request.resource.data.isMock == true &&
+          request.resource.data.status == 'Scheduled' &&
+          request.resource.data.workerId is string
+        ) || (
           request.resource.data.templateId is string &&
           id == request.resource.data.templateId + '_' + request.resource.data.date &&
           exists(/databases/$(database)/documents/schedule_templates/$(request.resource.data.templateId)) &&
@@ -41,6 +51,21 @@ service cloud.firestore {
           .hasOnly(['status', 'completedAt', 'completedByCitizenUid', 'completedByCitizenName']) &&
         request.resource.data.status == 'Completed' &&
         request.resource.data.completedByCitizenUid == request.auth.uid
+      ) || (
+        // Test route (isMock): the worker completes the stop from the Current Task card.
+        signedIn() &&
+        resource.data.isMock == true &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'completedAt', 'completedByCitizenName']) &&
+        request.resource.data.status == 'Completed'
+      ) || (
+        // Bin stop cleared by the worker: a camera photo is the proof (household stops need the resident's QR).
+        isWorker() &&
+        resource.data.get('stopType', 'bin') != 'household' &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'completedAt', 'completedByCitizenName', 'proofPhoto', 'proofAtMs']) &&
+        request.resource.data.status == 'Completed' &&
+        request.resource.data.proofPhoto is string
       );
     }
 
@@ -48,6 +73,38 @@ service cloud.firestore {
     match /schedule_templates/{id} {
       allow read: if signedIn();
       allow write: if signedIn() && !isWorker();
+    }
+
+    // Homes on the collection round. Private: only supervisors, workers and the home's own resident can read.
+    // A resident only ever sees their own home (the one they linked with its home code).
+    match /households/{id} {
+      allow read: if isSupervisor() || isWorker() ||
+        (signedIn() && resource.data.get('ownerUid', null) == request.auth.uid);
+      allow create, delete: if isSupervisor();
+      allow update: if isSupervisor() || (
+        // worker marks the home collected
+        isWorker() &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'collectedDate', 'collectedAtMs', 'collectedBy', 'collectedByName', 'proofPhoto'])
+      ) || (
+        // resident links an unclaimed home with its code
+        signedIn() && !isWorker() &&
+        resource.data.get('ownerUid', null) == null &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ownerUid', 'ownerName', 'claimedAtMs']) &&
+        request.resource.data.ownerUid == request.auth.uid
+      ) || (
+        // resident's QR scan marks their own home collected
+        signedIn() && !isWorker() &&
+        resource.data.get('ownerUid', null) == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'collectedDate', 'collectedAtMs', 'collectedBy', 'collectedByName'])
+      );
+    }
+
+    // Collection zones / areas (Academic, Tech, Cafeteria, Hostel...). Everyone signed in reads, supervisors manage.
+    match /zones/{id} {
+      allow read: if signedIn();
+      allow write: if isSupervisor();
     }
 
     // Audit trail of resident confirmations: create-only, tied to the signed-in resident.

@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -46,15 +46,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.westeroute.app.firebase.DispatchRepository
-import com.westeroute.app.firebase.FirebaseDataRepository
-import com.westeroute.app.firebase.LiveComplaint
-import com.westeroute.app.firebase.TaskStage
-import com.westeroute.app.location.LocationHelper
-import com.westeroute.app.notify.TaskAlarm
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.util.ImageUtil
+import com.wasteroute.app.firebase.DispatchRepository
+import com.wasteroute.app.firebase.FirebaseDataRepository
+import com.wasteroute.app.firebase.LiveComplaint
+import com.wasteroute.app.firebase.TaskStage
+import com.wasteroute.app.location.LocationHelper
+import com.wasteroute.app.notify.TaskAlarm
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.util.ImageUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -109,7 +109,7 @@ fun WorkerDispatchSection(
     }
 
     // Full-resolution proof photo
-    val openCamera = com.westeroute.app.util.rememberPhotoCapture(
+    val openCamera = com.wasteroute.app.util.rememberPhotoCapture(
         onCancelled = { if (proofBitmap == null) proofTaskId = null }
     ) { bmp -> proofBitmap = bmp }
 

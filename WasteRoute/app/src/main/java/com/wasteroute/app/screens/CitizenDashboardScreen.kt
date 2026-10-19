@@ -1,4 +1,4 @@
-package com.westeroute.app.screens
+package com.wasteroute.app.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -30,27 +30,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.launch
-import com.westeroute.app.firebase.FirebaseDataRepository
+import com.wasteroute.app.firebase.FirebaseDataRepository
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.westeroute.app.components.ActivityTimeline
-import com.westeroute.app.components.BentoQuickActions
-import com.westeroute.app.components.CitizenNavTab
-import com.westeroute.app.components.CityCleanlinessHero
-import com.westeroute.app.components.CollectionVerificationCard
-import com.westeroute.app.components.ComplaintJourneyCard
-import com.westeroute.app.components.FloatingReportCard
-import com.westeroute.app.components.ImpactMetrics
-import com.westeroute.app.components.NearbyBinMapCard
-import com.westeroute.app.components.NeighborhoodChart
-import com.westeroute.app.components.NotificationPreview
+import com.wasteroute.app.components.ActivityTimeline
+import com.wasteroute.app.components.BentoQuickActions
+import com.wasteroute.app.components.CitizenNavTab
+import com.wasteroute.app.components.CityCleanlinessHero
+import com.wasteroute.app.components.CollectionVerificationCard
+import com.wasteroute.app.components.ComplaintJourneyCard
+import com.wasteroute.app.components.FloatingReportCard
+import com.wasteroute.app.components.ImpactMetrics
+import com.wasteroute.app.components.NearbyBinMapCard
+import com.wasteroute.app.components.NeighborhoodChart
+import com.wasteroute.app.components.NotificationPreview
 import androidx.compose.material3.ExperimentalMaterial3Api
-import com.westeroute.app.components.PremiumBottomNavigation
-import com.westeroute.app.components.PremiumCitizenHeader
-import com.westeroute.app.model.UiPerformanceMode
+import com.wasteroute.app.components.PremiumBottomNavigation
+import com.wasteroute.app.components.PremiumCitizenHeader
+import com.wasteroute.app.model.UiPerformanceMode
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -66,8 +66,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.westeroute.app.components.ReportGrievanceBottomSheet
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.components.ReportGrievanceBottomSheet
+import com.wasteroute.app.theme.Emerald400
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -100,7 +100,9 @@ fun CitizenDashboardScreen(
     var capturedGrievancePhoto by remember { mutableStateOf<Bitmap?>(null) }
     var showReportGrievanceSheet by remember { mutableStateOf(false) }
     var showCampusMapDialog by remember { mutableStateOf(false) }
-    var mapBin by remember { mutableStateOf<com.westeroute.app.model.CampusSmartBin?>(null) }
+    // "See my block on the map": centre on the warden's block and show the bin nearest to it
+    var focusMyBlock by remember { mutableStateOf(false) }
+    var mapBin by remember { mutableStateOf<com.wasteroute.app.model.CampusSmartBin?>(null) }
     // Worker QR scan -> confirms the doorstep collection in Firestore
     var scanResult by remember { mutableStateOf<Pair<Boolean, String>?>(null) }
     val qrScanLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
@@ -108,7 +110,7 @@ fun CitizenDashboardScreen(
     ) { result ->
         val text = result.contents
         if (text != null) {
-            com.westeroute.app.firebase.CollectionRepository.confirmCollection(text, userName) { ok, msg ->
+            com.wasteroute.app.firebase.CollectionRepository.confirmCollection(text, userName) { ok, msg ->
                 scanResult = ok to msg
             }
         }
@@ -134,6 +136,10 @@ fun CitizenDashboardScreen(
     val myUid = remember { com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: "" }
     val myComplaints = liveComplaints.filter { myUid.isNotBlank() && it.reporterUid == myUid }
     var trackingTaskId by remember { mutableStateOf<String?>(null) }
+
+    // Only this resident's own home (private: other homes are never loaded on a citizen phone)
+    val myHomes by com.wasteroute.app.firebase.HouseholdRepository.mine.collectAsState()
+    LaunchedEffect(myUid) { com.wasteroute.app.firebase.HouseholdRepository.listenMine(myUid) }
     var showHistory by remember { mutableStateOf(false) }
 
     // The "ticket lodged" banner only flashes for a second
@@ -146,7 +152,7 @@ fun CitizenDashboardScreen(
 
     // Map: only my reports + the workers being called / driving for them
     val allWorkers by FirebaseDataRepository.workers.collectAsState()
-    val activeMine = myComplaints.filter { it.stage != com.westeroute.app.firebase.TaskStage.RESOLVED }
+    val activeMine = myComplaints.filter { it.stage != com.wasteroute.app.firebase.TaskStage.RESOLVED }
     val mapWorkers = run {
         val ids = activeMine.flatMap { t ->
             if (t.assignedWorkerId.isNullOrBlank()) t.notifiedWorkerIds else listOf(t.assignedWorkerId!!)
@@ -155,7 +161,7 @@ fun CitizenDashboardScreen(
             val task = activeMine.firstOrNull { it.assignedWorkerId.equals(w.id, ignoreCase = true) }
             if (task != null) {
                 w.copy(
-                    status = com.westeroute.app.components.stageTitle(task.stage),
+                    status = com.wasteroute.app.components.stageTitle(task.stage),
                     lat = task.truckLat ?: w.lat,
                     lng = task.truckLng ?: w.lng
                 )
@@ -169,8 +175,8 @@ fun CitizenDashboardScreen(
         myComplaints.forEach { c ->
             val prev = lastStages[c.id]
             if (prev != null && prev != c.stage) {
-                com.westeroute.app.notify.TaskAlarm.notifyInfo(
-                    context, c.id, "${c.ticketNo}: ${com.westeroute.app.components.stageTitle(c.stage)}",
+                com.wasteroute.app.notify.TaskAlarm.notifyInfo(
+                    context, c.id, "${c.ticketNo}: ${com.wasteroute.app.components.stageTitle(c.stage)}",
                     "${c.category} at ${c.location}"
                 )
             }
@@ -185,7 +191,7 @@ fun CitizenDashboardScreen(
     var reportLng by remember { mutableStateOf<Double?>(null) }
     var reportAddress by remember { mutableStateOf<String?>(null) }
     var trackLocation by remember { mutableStateOf(false) }
-    var locationGranted by remember { mutableStateOf(com.westeroute.app.location.LocationHelper.hasPermission(context)) }
+    var locationGranted by remember { mutableStateOf(com.wasteroute.app.location.LocationHelper.hasPermission(context)) }
     var locationRetry by remember { mutableStateOf(0) }
     var lastGeocode by remember { mutableStateOf<Pair<Double, Double>?>(null) }
 
@@ -193,10 +199,10 @@ fun CitizenDashboardScreen(
         reportLat = lat
         reportLng = lng
         val last = lastGeocode
-        if (last == null || com.westeroute.app.location.LocationHelper.distanceM(last.first, last.second, lat, lng) > 40) {
+        if (last == null || com.wasteroute.app.location.LocationHelper.distanceM(last.first, last.second, lat, lng) > 40) {
             lastGeocode = lat to lng
             scope.launch {
-                reportAddress = com.westeroute.app.location.LocationHelper.address(context, lat, lng)
+                reportAddress = com.wasteroute.app.location.LocationHelper.address(context, lat, lng)
                     ?: String.format(java.util.Locale.US, "%.5f, %.5f", lat, lng)
             }
         }
@@ -204,9 +210,9 @@ fun CitizenDashboardScreen(
     DisposableEffect(trackLocation, locationGranted, locationRetry) {
         if (!trackLocation || !locationGranted) return@DisposableEffect onDispose { }
         val first = scope.launch {
-            com.westeroute.app.location.LocationHelper.currentLocation(context)?.let { applyLocation(it.first, it.second) }
+            com.wasteroute.app.location.LocationHelper.currentLocation(context)?.let { applyLocation(it.first, it.second) }
         }
-        val stop = com.westeroute.app.location.LocationHelper.startUpdates(context, 3000L) { lat, lng -> applyLocation(lat, lng) }
+        val stop = com.wasteroute.app.location.LocationHelper.startUpdates(context, 3000L) { lat, lng -> applyLocation(lat, lng) }
         onDispose {
             first.cancel()
             stop()
@@ -214,7 +220,7 @@ fun CitizenDashboardScreen(
     }
 
     // Full-resolution camera photo of the garbage
-    val launchCamera = com.westeroute.app.util.rememberPhotoCapture(
+    val launchCamera = com.wasteroute.app.util.rememberPhotoCapture(
         onCancelled = { trackLocation = false }
     ) { bitmap ->
         capturedGrievancePhoto = bitmap
@@ -223,7 +229,7 @@ fun CitizenDashboardScreen(
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) {
-        locationGranted = com.westeroute.app.location.LocationHelper.hasPermission(context)
+        locationGranted = com.wasteroute.app.location.LocationHelper.hasPermission(context)
         locationRetry++
         if (showReportGrievanceSheet) Unit else launchCamera()
     }
@@ -234,7 +240,7 @@ fun CitizenDashboardScreen(
         reportAddress = null
         lastGeocode = null
         trackLocation = true
-        if (com.westeroute.app.location.LocationHelper.hasPermission(context)) {
+        if (com.wasteroute.app.location.LocationHelper.hasPermission(context)) {
             locationGranted = true
             launchCamera()
         } else {
@@ -357,7 +363,7 @@ fun CitizenDashboardScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         activeMine.take(3).forEach { task ->
-                            com.westeroute.app.components.CitizenTaskTrackerCard(
+                            com.wasteroute.app.components.CitizenTaskTrackerCard(
                                 task = task,
                                 onTrackTruck = { trackingTaskId = task.id }
                             )
@@ -415,6 +421,31 @@ fun CitizenDashboardScreen(
                             onNavigateToMap()
                         },
                         performanceMode = performanceMode
+                    )
+                }
+            }
+
+            item(key = "spacer_my_home") {
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+
+            // 6b. My home: collected-today status + link-my-home by code
+            item(key = "my_home") {
+                AnimatedVisibility(
+                    visible = mapVisible,
+                    enter = fadeIn(tween(500))
+                ) {
+                    com.wasteroute.app.components.MyHomeCard(
+                        homes = myHomes,
+                        onLinkHome = { code, done ->
+                            com.wasteroute.app.firebase.HouseholdRepository.claimHome(code, userName, done)
+                        },
+                        onShowOnMap = {
+                            mapBin = null
+                            focusMyBlock = true
+                            showCampusMapDialog = true
+                            onNavigateToMap()
+                        }
                     )
                 }
             }
@@ -482,11 +513,13 @@ fun CitizenDashboardScreen(
         }
 
         if (showCampusMapDialog) {
-            com.westeroute.app.components.CampusOpenStreetMapDialog(
+            com.wasteroute.app.components.CampusOpenStreetMapDialog(
                 initialSelectedBin = mapBin?.takeIf { it.id != "NONE" },
                 complaints = activeMine,
                 workers = mapWorkers,
-                onDismiss = { showCampusMapDialog = false }
+                households = myHomes,
+                focusHome = if (focusMyBlock) myHomes.firstOrNull() else null,
+                onDismiss = { showCampusMapDialog = false; focusMyBlock = false }
             )
         }
 
@@ -500,7 +533,7 @@ fun CitizenDashboardScreen(
                     String.format(java.util.Locale.US, "%.5f, %.5f", reportLat, reportLng)
                 } else null,
                 onRetryLocation = {
-                    if (com.westeroute.app.location.LocationHelper.hasPermission(context)) {
+                    if (com.wasteroute.app.location.LocationHelper.hasPermission(context)) {
                         locationGranted = true
                         locationRetry++
                     } else {
@@ -510,7 +543,7 @@ fun CitizenDashboardScreen(
                     }
                 },
                 onUseCampusLocation = {
-                    applyLocation(com.westeroute.app.model.CampusMapConfig.CAMPUS_LAT, com.westeroute.app.model.CampusMapConfig.CAMPUS_LNG)
+                    applyLocation(com.wasteroute.app.model.CampusMapConfig.CAMPUS_LAT, com.wasteroute.app.model.CampusMapConfig.CAMPUS_LNG)
                 },
                 onRetakePhoto = {
                     openCameraAndReport()
@@ -534,9 +567,9 @@ fun CitizenDashboardScreen(
                         citizenName = userName,
                         lat = reportLat ?: 12.8225,
                         lng = reportLng ?: 80.0438,
-                        photoDataUri = capturedGrievancePhoto?.let { com.westeroute.app.util.ImageUtil.toDataUri(it) } ?: "",
+                        photoDataUri = capturedGrievancePhoto?.let { com.wasteroute.app.util.ImageUtil.toDataUri(it) } ?: "",
                         reporterUid = myUid,
-                        citizenEmail = com.westeroute.app.model.CitizenAuthSession.currentUser?.email ?: ""
+                        citizenEmail = com.wasteroute.app.model.CitizenAuthSession.currentUser?.email ?: ""
                     )
                 },
                 onDismiss = {
@@ -547,14 +580,14 @@ fun CitizenDashboardScreen(
         }
 
         if (showHistory) {
-            com.westeroute.app.components.ComplaintHistoryDialog(
+            com.wasteroute.app.components.ComplaintHistoryDialog(
                 title = "My complaints",
                 subtitle = "Every garbage report you sent",
                 tasks = myComplaints,
                 isWorker = false,
                 viewerId = myUid,
                 onRemove = { list ->
-                    com.westeroute.app.firebase.DispatchRepository.hideFromHistory(list.map { it.id }, myUid)
+                    com.wasteroute.app.firebase.DispatchRepository.hideFromHistory(list.map { it.id }, myUid)
                 },
                 onTrack = { trackingTaskId = it.id },
                 onDismiss = {
@@ -566,7 +599,7 @@ fun CitizenDashboardScreen(
 
         // Live truck map for one of the citizen's reports
         myComplaints.firstOrNull { it.id == trackingTaskId }?.let { task ->
-            com.westeroute.app.components.TaskTrackingMapDialog(
+            com.wasteroute.app.components.TaskTrackingMapDialog(
                 task = task,
                 onDismiss = { trackingTaskId = null }
             )
@@ -605,14 +638,17 @@ fun CitizenDashboardScreen(
 
         // 15. Profile & Account Settings Sheet with Sign Out
         if (showProfileSheet) {
-            com.westeroute.app.components.AccountProfileBottomSheet(
+            com.wasteroute.app.components.AccountProfileBottomSheet(
                 userName = userName,
-                userEmail = com.westeroute.app.model.CitizenAuthSession.currentUser?.email,
-                userRole = com.westeroute.app.model.UserRole.CITIZEN,
+                userEmail = com.wasteroute.app.model.CitizenAuthSession.currentUser?.email,
+                userRole = com.wasteroute.app.model.UserRole.CITIZEN,
                 onSeedTestData = {
-                    com.westeroute.app.firebase.MockDataSeeder.seedBins { _, msg -> android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show() }
+                    com.wasteroute.app.firebase.MockDataSeeder.seedBins { _, msg -> android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show() }
                 },
-                onSignOut = onSignOut,
+                onSignOut = {
+                    com.wasteroute.app.firebase.HouseholdRepository.stopListening()
+                    onSignOut()
+                },
                 onDismiss = { showProfileSheet = false }
             )
         }

@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import android.annotation.SuppressLint
 import android.webkit.WebChromeClient
@@ -46,10 +46,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.westeroute.app.model.CampusMapConfig
-import com.westeroute.app.model.UiPerformanceMode
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.model.CampusMapConfig
+import com.wasteroute.app.model.UiPerformanceMode
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -58,7 +58,7 @@ fun TaskLocationCard(
     destinationLat: Double,
     destinationLng: Double,
     /** Pin shown on the map for the destination (the real reported / scheduled spot). */
-    spot: com.westeroute.app.firebase.LiveComplaint? = null,
+    spot: com.wasteroute.app.firebase.LiveComplaint? = null,
     onNavigateClick: () -> Unit = {},
     onViewLocationClick: () -> Unit = {},
     performanceMode: UiPerformanceMode = UiPerformanceMode.PREMIUM,
@@ -71,14 +71,14 @@ fun TaskLocationCard(
     // Real GPS position of the worker (no fixed/campus position)
     var me by remember { mutableStateOf<Pair<Double, Double>?>(null) }
     androidx.compose.runtime.LaunchedEffect(Unit) {
-        com.westeroute.app.location.LocationHelper.currentLocation(ctx)?.let { me = it }
+        com.wasteroute.app.location.LocationHelper.currentLocation(ctx)?.let { me = it }
     }
     androidx.compose.runtime.DisposableEffect(Unit) {
-        val stop = com.westeroute.app.location.LocationHelper.startUpdates(ctx, 5000L) { la, ln -> me = la to ln }
+        val stop = com.wasteroute.app.location.LocationHelper.startUpdates(ctx, 5000L) { la, ln -> me = la to ln }
         onDispose { stop() }
     }
-    val liveMeters = me?.let { com.westeroute.app.location.LocationHelper.distanceM(it.first, it.second, destinationLat, destinationLng) }
-    val distance = liveMeters?.let { com.westeroute.app.location.LocationHelper.formatDistance(it) + " away" } ?: "GPS not available"
+    val liveMeters = me?.let { com.wasteroute.app.location.LocationHelper.distanceM(it.first, it.second, destinationLat, destinationLng) }
+    val distance = liveMeters?.let { com.wasteroute.app.location.LocationHelper.formatDistance(it) + " away" } ?: "GPS not available"
     val estimatedTravel = liveMeters?.let { "${etaMinutes(it)} min" } ?: "--"
     var webRef by remember { mutableStateOf<WebView?>(null) }
     androidx.compose.runtime.LaunchedEffect(me, webRef) {

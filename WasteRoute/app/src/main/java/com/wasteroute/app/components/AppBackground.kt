@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import com.westeroute.app.R
-import com.westeroute.app.theme.DeepNavy
+import com.wasteroute.app.R
+import com.wasteroute.app.theme.DeepNavy
 
 private val LightBaseBg = Color(0xFFEDF2F7)
 

@@ -1,2 +1,2 @@
-# WesteRoute Proguard Rules
+# WasteRoute Proguard Rules
 -keepattributes *Annotation*

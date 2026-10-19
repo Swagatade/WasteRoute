@@ -1,4 +1,4 @@
-package com.westeroute.app.screens
+package com.wasteroute.app.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -61,21 +61,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.westeroute.app.auth.FirebaseAuthManager
-import com.westeroute.app.auth.UserSessionManager
-import com.westeroute.app.components.GlassCard
-import com.westeroute.app.components.PasswordField
-import com.westeroute.app.components.PrimaryButton
-import com.westeroute.app.components.WesteRouteLogo
-import com.westeroute.app.components.WesteRouteTextField
-import com.westeroute.app.model.UserRole
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.ElectricBlue400
-import com.westeroute.app.theme.ElectricBlue500
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.theme.NeutralGray400
-import com.westeroute.app.theme.NeutralGray500
-import com.westeroute.app.theme.NeutralGray600
+import com.wasteroute.app.auth.FirebaseAuthManager
+import com.wasteroute.app.auth.UserSessionManager
+import com.wasteroute.app.components.GlassCard
+import com.wasteroute.app.components.PasswordField
+import com.wasteroute.app.components.PrimaryButton
+import com.wasteroute.app.components.WasteRouteLogo
+import com.wasteroute.app.components.WasteRouteTextField
+import com.wasteroute.app.model.UserRole
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.ElectricBlue400
+import com.wasteroute.app.theme.ElectricBlue500
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.theme.NeutralGray400
+import com.wasteroute.app.theme.NeutralGray500
+import com.wasteroute.app.theme.NeutralGray600
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
@@ -268,7 +268,7 @@ fun WorkerLoginScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            WesteRouteLogo(
+                            WasteRouteLogo(
                                 size = 36.dp,
                                 showGlow = false
                             )
@@ -372,7 +372,7 @@ fun WorkerLoginScreen(
                         Spacer(modifier = Modifier.height(20.dp))
 
                         // Field 1: Worker ID
-                        WesteRouteTextField(
+                        WasteRouteTextField(
                             value = workerId,
                             onValueChange = {
                                 workerId = it.uppercase()
@@ -415,7 +415,7 @@ fun WorkerLoginScreen(
                         Spacer(modifier = Modifier.height(14.dp))
 
                         // Field 2: Special Worker Email (@worker.in)
-                        WesteRouteTextField(
+                        WasteRouteTextField(
                             value = workerEmail,
                             onValueChange = {
                                 workerEmail = it

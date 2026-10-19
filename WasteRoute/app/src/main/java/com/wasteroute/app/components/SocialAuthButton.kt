@@ -1,6 +1,6 @@
 @file:Suppress("FunctionName")
 
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
@@ -40,7 +40,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.material3.CircularProgressIndicator
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.theme.Emerald400
 
 private val GoogleIconVector: ImageVector by lazy {
     ImageVector.Builder(

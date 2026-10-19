@@ -1,4 +1,4 @@
-package com.westeroute.app.theme
+package com.wasteroute.app.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -62,7 +62,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun WesteRouteTheme(
+fun WasteRouteTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     premiumMode: Boolean = true,
     content: @Composable () -> Unit

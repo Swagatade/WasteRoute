@@ -1,4 +1,4 @@
-package com.westeroute.app.screens
+package com.wasteroute.app.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -40,12 +40,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.westeroute.app.components.RoleCard
-import com.westeroute.app.components.WesteRouteLogo
-import com.westeroute.app.model.UserRole
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.theme.Emerald700
-import com.westeroute.app.theme.NeutralGray400
+import com.wasteroute.app.components.RoleCard
+import com.wasteroute.app.components.WasteRouteLogo
+import com.wasteroute.app.model.UserRole
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.theme.Emerald700
+import com.wasteroute.app.theme.NeutralGray400
 
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.delay
@@ -114,8 +114,8 @@ fun RoleSelectionScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // WesteRoute Identity Logo
-                WesteRouteLogo(
+                // WasteRoute Identity Logo
+                WasteRouteLogo(
                     size = 80.dp,
                     showGlow = true
                 )
@@ -124,7 +124,7 @@ fun RoleSelectionScreen(
 
                 // Brand Name
                 Text(
-                    text = "WesteRoute",
+                    text = "WasteRoute",
                     style = MaterialTheme.typography.displayMedium.copy(
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = (-0.5).sp
@@ -172,7 +172,7 @@ fun RoleSelectionScreen(
 
                 // Supporting text
                 Text(
-                    text = "Select your role to continue to WesteRoute.",
+                    text = "Select your role to continue to WasteRoute.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = bodyColor,
                     textAlign = TextAlign.Center

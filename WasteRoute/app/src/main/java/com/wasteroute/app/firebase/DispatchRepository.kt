@@ -1,10 +1,10 @@
-package com.westeroute.app.firebase
+package com.wasteroute.app.firebase
 
 import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.westeroute.app.location.LocationHelper
+import com.wasteroute.app.location.LocationHelper
 
 /**
  * Worker-side workflow for a citizen garbage report. Everything is written to the same

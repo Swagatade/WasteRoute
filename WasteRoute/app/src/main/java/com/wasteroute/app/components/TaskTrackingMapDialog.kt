@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import android.annotation.SuppressLint
 import android.webkit.WebChromeClient
@@ -47,12 +47,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowCompat
-import com.westeroute.app.firebase.LiveComplaint
-import com.westeroute.app.firebase.LiveWorker
-import com.westeroute.app.location.LocationHelper
-import com.westeroute.app.model.CampusMapConfig
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
+import com.wasteroute.app.firebase.LiveComplaint
+import com.wasteroute.app.firebase.LiveWorker
+import com.wasteroute.app.location.LocationHelper
+import com.wasteroute.app.model.CampusMapConfig
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
 import kotlinx.coroutines.delay
 
 /**
@@ -158,7 +158,7 @@ fun TaskTrackingMapDialog(
                                 settings.allowContentAccess = true
                                 settings.cacheMode = WebSettings.LOAD_DEFAULT
                                 settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-                                settings.userAgentString = "Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36 WestRouteApp/1.0"
+                                settings.userAgentString = "Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36 WasteRouteApp/1.0"
                                 webViewClient = WebViewClient()
                                 webChromeClient = WebChromeClient()
                                 tag = html
@@ -200,10 +200,10 @@ fun TaskTrackingMapDialog(
                         fontSize = 12.sp,
                         color = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B)
                     )
-                    val liveWorkers by com.westeroute.app.firebase.FirebaseDataRepository.workers.collectAsState()
+                    val liveWorkers by com.wasteroute.app.firebase.FirebaseDataRepository.workers.collectAsState()
                     WorkerPhoneRow(
                         phone = remember(liveWorkers, task.assignedWorkerId, task.assignedWorkerName) {
-                            com.westeroute.app.firebase.FirebaseDataRepository.workerPhone(task.assignedWorkerId, task.assignedWorkerName)
+                            com.wasteroute.app.firebase.FirebaseDataRepository.workerPhone(task.assignedWorkerId, task.assignedWorkerName)
                         }
                     )
                 }

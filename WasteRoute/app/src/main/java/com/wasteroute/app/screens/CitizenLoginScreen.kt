@@ -1,4 +1,4 @@
-package com.westeroute.app.screens
+package com.wasteroute.app.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -66,24 +66,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.westeroute.app.auth.FirebaseAuthManager
-import com.westeroute.app.auth.NoGoogleAccountException
-import com.westeroute.app.auth.UserCancelledException
-import com.westeroute.app.auth.UserSessionManager
-import com.westeroute.app.components.GlassCard
-import com.westeroute.app.components.PasswordField
-import com.westeroute.app.components.PrimaryButton
-import com.westeroute.app.components.SocialAuthButton
-import com.westeroute.app.components.SocialProvider
-import com.westeroute.app.components.WesteRouteLogo
-import com.westeroute.app.components.WesteRouteTextField
-import com.westeroute.app.model.CitizenAuthSession
-import com.westeroute.app.theme.Cyan400
-import com.westeroute.app.theme.Emerald400
-import com.westeroute.app.theme.Emerald500
-import com.westeroute.app.theme.NeutralGray400
-import com.westeroute.app.theme.NeutralGray500
-import com.westeroute.app.theme.NeutralGray600
+import com.wasteroute.app.auth.FirebaseAuthManager
+import com.wasteroute.app.auth.NoGoogleAccountException
+import com.wasteroute.app.auth.UserCancelledException
+import com.wasteroute.app.auth.UserSessionManager
+import com.wasteroute.app.components.GlassCard
+import com.wasteroute.app.components.PasswordField
+import com.wasteroute.app.components.PrimaryButton
+import com.wasteroute.app.components.SocialAuthButton
+import com.wasteroute.app.components.SocialProvider
+import com.wasteroute.app.components.WasteRouteLogo
+import com.wasteroute.app.components.WasteRouteTextField
+import com.wasteroute.app.model.CitizenAuthSession
+import com.wasteroute.app.theme.Cyan400
+import com.wasteroute.app.theme.Emerald400
+import com.wasteroute.app.theme.Emerald500
+import com.wasteroute.app.theme.NeutralGray400
+import com.wasteroute.app.theme.NeutralGray500
+import com.wasteroute.app.theme.NeutralGray600
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
@@ -197,7 +197,10 @@ fun CitizenLoginScreen(
 
     LaunchedEffect(Unit) {
         isVisible = true
-        val existing = FirebaseAuthManager.getCurrentUser() ?: UserSessionManager.restoreSessionIfAvailable(context)
+        // A signed-in worker (@worker.in) is never auto-signed in as a citizen
+        val live = FirebaseAuthManager.getCurrentUser()
+        val existing = if (live?.email?.endsWith(FirebaseAuthManager.REQUIRED_WORKER_DOMAIN, ignoreCase = true) == true) null
+            else live ?: UserSessionManager.restoreSessionIfAvailable(context)
         if (existing != null) {
             CitizenAuthSession.setSession(existing)
             UserSessionManager.saveCitizenSession(context, existing)
@@ -284,7 +287,7 @@ fun CitizenLoginScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            WesteRouteLogo(
+                            WasteRouteLogo(
                                 size = 36.dp,
                                 showGlow = false
                             )
@@ -472,7 +475,7 @@ fun CitizenLoginScreen(
 
                         // SECTION 2: EMAIL & PASSWORD AUTHENTICATION
                         // Input 1: Email Address
-                        WesteRouteTextField(
+                        WasteRouteTextField(
                             value = email,
                             onValueChange = {
                                 email = it

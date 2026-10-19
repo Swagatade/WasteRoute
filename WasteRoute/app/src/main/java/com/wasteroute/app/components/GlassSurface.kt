@@ -1,4 +1,4 @@
-package com.westeroute.app.components
+package com.wasteroute.app.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.westeroute.app.model.UiPerformanceMode
+import com.wasteroute.app.model.UiPerformanceMode
 
 enum class GlassSurfaceLevel {
     PRIMARY, // Level 1: Deep translucent, gradient border, rich shadow

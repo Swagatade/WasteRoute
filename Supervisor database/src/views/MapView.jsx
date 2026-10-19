@@ -12,9 +12,13 @@ import {
   Compass,
   Navigation,
   RefreshCw,
-  ExternalLink
+  ExternalLink,
+  Home,
+  Plus
 } from 'lucide-react';
 import StatusBadge from '../components/StatusBadge';
+import { DEFAULT_ZONES } from '../data/mockData';
+import { toDateString } from '../firebase/firestoreService';
 
 const CAMPUS_DEFAULT_LAT = parseFloat(import.meta.env.VITE_CAMPUS_LAT) || 12.8230;
 const CAMPUS_DEFAULT_LNG = parseFloat(import.meta.env.VITE_CAMPUS_LNG) || 80.0440;
@@ -37,9 +41,22 @@ export default function MapView({
   bins = [], 
   complaints = [], 
   workers = [], 
+  schedules = [],
+  households = [],
+  zones = [],
+  onAddHostel,
   onSelectComplaint 
 }) {
-  const [filterType, setFilterType] = useState('all'); // all | bins | complaints | trucks
+  const [filterType, setFilterType] = useState('all'); // all | bins | hostels
+  // Add-hostel mode: click the map to drop a pin, name it, save to Firestore (same collection the workers read)
+  const [addMode, setAddMode] = useState(false);
+  const [pending, setPending] = useState(null); // { lat, lng }
+  const [hostelName, setHostelName] = useState('');
+  const [hostelArea, setHostelArea] = useState('ward-ktr-04');
+  const [saving, setSaving] = useState(false);
+  const [saveMsg, setSaveMsg] = useState(null);
+  const addModeRef = useRef(false);
+  addModeRef.current = addMode;
   const [selectedMapItem, setSelectedMapItem] = useState(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   
@@ -83,6 +100,9 @@ export default function MapView({
     const markersGroup = L.layerGroup().addTo(map);
     markersLayerRef.current = markersGroup;
     mapInstanceRef.current = map;
+    map.on('click', (e) => {
+      if (addModeRef.current) setPending({ lat: Number(e.latlng.lat.toFixed(6)), lng: Number(e.latlng.lng.toFixed(6)) });
+    });
     setMapLoaded(true);
 
     return () => {
@@ -195,6 +215,44 @@ export default function MapView({
       });
     }
 
+
+    // 2c. HOSTEL BLOCKS LAYER (Firestore `households`: green + tick once collected today)
+    if (filterType === 'all' || filterType === 'hostels') {
+      const today = toDateString();
+      households.forEach((h) => {
+        const lat = Number(h.lat);
+        const lng = Number(h.lng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+        const done = h.collectedDate === today;
+        // Men's (boys) hostels are blue, women's (girls) hostels are pink; a green ring + tick means collected today.
+        const zone = (zones.length ? zones : DEFAULT_ZONES).find((z) => z.id === h.areaId);
+        const girls = zone?.group === 'girls' || h.areaId === 'ward-ktr-06';
+        const color = girls ? '#EC4899' : '#2563EB';
+        const ring = done ? '#22C55E' : '#FFFFFF';
+        const glyph = done ? '<path d="M20 6 9 17l-5-5"/>' : '<path d="M3 11l9-8 9 8M5 10v10h14V10"/>';
+        const icon = L.divIcon({
+          className: 'custom-hostel-marker',
+          html: `<div style="width:32px;height:32px;border-radius:10px;background:${color};border:${done ? 4 : 2}px solid ${ring};display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(0,0,0,0.4);cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${glyph}</svg></div>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16]
+        });
+        const marker = L.marker([lat, lng], { icon, zIndexOffset: 300 });
+        marker.on('click', () => setSelectedMapItem({ ...h, itemType: 'hostel', coordinates: { lat, lng } }));
+        marker.bindTooltip(`<b>${h.name || h.code}</b><br/>${girls ? "Women's (Girls)" : "Men's (Boys)"} · ${done ? 'Collected today' : 'Waiting for collection'}`, {
+          direction: 'top',
+          offset: [0, -12]
+        });
+        markersGroup.addLayer(marker);
+      });
+    }
+
+    // Pin being placed in add-hostel mode
+    if (pending) {
+      markersGroup.addLayer(L.circleMarker([pending.lat, pending.lng], {
+        radius: 11, color: '#FFFFFF', weight: 3, fillColor: '#38BDF8', fillOpacity: 0.95
+      }));
+    }
+
     // 3. VEHICLES / WORKERS LAYER
     if (false) { // map shows bins only
       workers.forEach((worker, idx) => {
@@ -243,7 +301,30 @@ export default function MapView({
       });
     }
 
-  }, [bins, complaints, workers, filterType, mapLoaded]);
+  }, [bins, complaints, workers, schedules, households, pending, filterType, mapLoaded]);
+
+  // Crosshair while placing a hostel block
+  useEffect(() => {
+    if (mapContainerRef.current) mapContainerRef.current.style.cursor = addMode ? 'crosshair' : '';
+  }, [addMode]);
+
+  const handleSaveHostel = async (e) => {
+    e.preventDefault();
+    if (!pending || !hostelName.trim() || !onAddHostel) return;
+    setSaving(true);
+    setSaveMsg(null);
+    try {
+      const area = (zones.length ? zones : DEFAULT_ZONES).find((w) => w.id === hostelArea);
+      const code = await onAddHostel({ name: hostelName.trim(), areaId: hostelArea, areaName: area?.name || '', lat: pending.lat, lng: pending.lng });
+      setSaveMsg({ ok: true, text: `${hostelName.trim()} saved as ${code}.` });
+      setHostelName('');
+      setPending(null);
+    } catch (err) {
+      setSaveMsg({ ok: false, text: /permission|insufficient/i.test(err.message || '') ? 'Firebase refused the write: deploy the updated Firestore rules.' : `Could not save: ${err.message}` });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   // Jump to specific POI on SRM KTR
   const handleJumpToPoi = (poi) => {
@@ -274,12 +355,16 @@ export default function MapView({
             </span>
           </div>
           <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>
-            Bin locations on the SRM KTR campus.
+            Bin locations and hostel blocks on the SRM KTR campus.
           </p>
         </div>
 
         {/* Layer Filters */}
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <button onClick={() => setFilterType('all')} className={`btn btn-sm ${filterType === 'all' ? 'btn-primary' : 'btn-secondary'}`}>
+            <Layers size={14} />
+            <span>All</span>
+          </button>
           <button 
             onClick={() => setFilterType('bins')} 
             className={`btn btn-sm ${filterType === 'bins' ? 'btn-primary' : 'btn-secondary'}`}
@@ -287,6 +372,19 @@ export default function MapView({
             <Trash2 size={14} />
             <span>Bin Locations ({bins.length})</span>
           </button>
+          <button onClick={() => setFilterType('hostels')} className={`btn btn-sm ${filterType === 'hostels' ? 'btn-primary' : 'btn-secondary'}`}>
+            <Home size={14} />
+            <span>Hostel Blocks ({households.length})</span>
+          </button>
+          {onAddHostel && (
+            <button
+              onClick={() => { setAddMode((v) => !v); setPending(null); setSaveMsg(null); if (!addMode && filterType === 'bins') setFilterType('all'); }}
+              className={`btn btn-sm ${addMode ? 'btn-primary' : 'btn-secondary'}`}
+            >
+              <Plus size={14} />
+              <span>{addMode ? 'Click the map to place…' : 'Add hostel block'}</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -309,7 +407,7 @@ export default function MapView({
       </div>
 
       {/* Main Map Canvas Area */}
-      <div style={{ display: 'grid', gridTemplateColumns: selectedMapItem ? '1fr 340px' : '1fr', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: (selectedMapItem || pending) ? '1fr 340px' : '1fr', gap: '20px' }}>
         <div 
           className="glass-panel" 
           style={{ 
@@ -324,6 +422,19 @@ export default function MapView({
             ref={mapContainerRef} 
             style={{ width: '100%', height: '100%', zIndex: 1 }} 
           />
+
+          {/* Hostel colour legend */}
+          <div style={{
+            position: 'absolute', top: '16px', right: '16px', zIndex: 1000,
+            background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(10px)',
+            border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '10px 14px',
+            display: 'grid', gap: '6px', fontSize: '11.5px', fontWeight: 700, color: 'var(--text-primary)'
+          }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><i style={{ width: 14, height: 14, borderRadius: 4, background: '#2563EB', border: '2px solid #FFF', display: 'inline-block' }} /> Men's (Boys) hostel</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><i style={{ width: 14, height: 14, borderRadius: 4, background: '#EC4899', border: '2px solid #FFF', display: 'inline-block' }} /> Women's (Girls) hostel</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><i style={{ width: 14, height: 14, borderRadius: 4, background: '#64748B', border: '3px solid #22C55E', display: 'inline-block' }} /> Collected today</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><i style={{ width: 14, height: 14, borderRadius: 7, background: '#10B981', border: '2px solid #FFF', display: 'inline-block' }} /> Bin</span>
+          </div>
 
           {/* Floating Campus Badge */}
           <div style={{
@@ -348,12 +459,31 @@ export default function MapView({
           </div>
         </div>
 
+        {/* New hostel block form (add mode) */}
+        {pending && (
+          <form onSubmit={handleSaveHostel} className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px', height: '620px', overflowY: 'auto' }}>
+            <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--accent-cyan)', textTransform: 'uppercase' }}>New hostel block</span>
+            <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+              Location: <b>{pending.lat}, {pending.lng}</b><br/>Click elsewhere on the map to move the pin.
+            </div>
+            <input className="input-field" placeholder="Hostel block name" value={hostelName} onChange={(e) => setHostelName(e.target.value)} autoFocus />
+            <select className="input-field" value={hostelArea} onChange={(e) => setHostelArea(e.target.value)}>
+              {(zones.length ? zones : DEFAULT_ZONES).map((w) => (
+                <option key={w.id} value={w.id} style={{ background: '#0D1322' }}>{w.name}</option>
+              ))}
+            </select>
+            <button type="submit" className="btn btn-primary" disabled={saving || !hostelName.trim()}>{saving ? 'Saving…' : 'Save to Firestore'}</button>
+            <button type="button" className="btn btn-secondary" onClick={() => setPending(null)}>Cancel</button>
+            {saveMsg && <div style={{ fontSize: '12px', color: saveMsg.ok ? '#6EE7B7' : '#FCA5A5' }}>{saveMsg.text}</div>}
+          </form>
+        )}
+
         {/* Selected Item Detail Sidebar */}
-        {selectedMapItem && (
+        {selectedMapItem && !pending && (
           <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', height: '620px', overflowY: 'auto' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--accent-cyan)', textTransform: 'uppercase' }}>
-                {selectedMapItem.itemType === 'bin' ? 'Bin Location' : selectedMapItem.itemType === 'complaint' ? 'Citizen Grievance' : 'Fleet Unit'}
+                {selectedMapItem.itemType === 'bin' ? 'Bin Location' : selectedMapItem.itemType === 'hostel' ? 'Hostel Block' : selectedMapItem.itemType === 'complaint' ? 'Citizen Grievance' : 'Fleet Unit'}
               </span>
               <button 
                 onClick={() => setSelectedMapItem(null)} 
@@ -385,6 +515,23 @@ export default function MapView({
                   <ExternalLink size={14} />
                   <span>View on OpenStreetMap</span>
                 </a>
+              </>
+            )}
+
+            {selectedMapItem.itemType === 'hostel' && (
+              <>
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: 800, color: selectedMapItem.areaId === 'ward-ktr-06' ? '#F472B6' : '#60A5FA' }}>{selectedMapItem.name || selectedMapItem.code}</h3>
+                  <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)' }}>{selectedMapItem.code} · {selectedMapItem.areaName}</p>
+                </div>
+                <div style={{ fontSize: '12.5px', fontWeight: 700, color: selectedMapItem.collectedDate === toDateString() ? '#34D399' : '#FBBF24' }}>
+                  {selectedMapItem.collectedDate === toDateString()
+                    ? `Collected today${selectedMapItem.collectedByName ? ' by ' + selectedMapItem.collectedByName : ''}`
+                    : 'Waiting for collection'}
+                </div>
+                {selectedMapItem.ownerName && (
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Linked resident: <b>{selectedMapItem.ownerName}</b></div>
+                )}
               </>
             )}
 

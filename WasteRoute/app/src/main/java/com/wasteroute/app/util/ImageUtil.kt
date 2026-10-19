@@ -1,4 +1,4 @@
-package com.westeroute.app.util
+package com.wasteroute.app.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
