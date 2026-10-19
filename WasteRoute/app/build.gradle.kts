@@ -17,6 +17,11 @@ if (envFile != null && envFile.exists()) {
     FileInputStream(envFile).use { envProperties.load(it) }
 }
 
+val keystoreProps = Properties()
+rootProject.file("keystore.properties").takeIf { it.exists() }?.let { f ->
+    FileInputStream(f).use { keystoreProps.load(it) }
+}
+
 android {
     namespace = "com.wasteroute.app"
     compileSdk = 35
@@ -25,8 +30,8 @@ android {
         applicationId = "com.wasteroute.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -47,6 +52,20 @@ android {
         buildConfigField("String", "CAMPUS_NAME", "\"$campusName\"")
     }
 
+    signingConfigs {
+        if (keystoreProps.containsKey("storeFile")) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+                enableV1Signing = true
+                enableV2Signing = true
+                enableV3Signing = true
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -54,7 +73,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
         }
     }
     compileOptions {
