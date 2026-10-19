@@ -25,6 +25,13 @@ export const isFirebaseConfigValid = Boolean(
   firebaseConfig.appId
 );
 
+if (!firebaseConfig.measurementId) {
+  console.error(
+    "VITE_FIREBASE_MEASUREMENT_ID is not set. Analytics is disabled. " +
+    "Set it in .env (or the host's build settings) and rebuild; Vite reads it at build time."
+  );
+}
+
 let app = null;
 let auth = null;
 let db = null;
