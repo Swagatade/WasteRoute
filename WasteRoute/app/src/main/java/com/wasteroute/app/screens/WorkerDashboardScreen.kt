@@ -479,11 +479,6 @@ fun WorkerDashboardScreen(
                     areaLabel = myHomes.map { it.areaName }.filter { it.isNotBlank() }.distinct().joinToString(", ")
                         .ifBlank { "your area" },
                     hasAssignedArea = myAreaIds.isNotEmpty(),
-                    onMarkCollected = { home ->
-                        com.wasteroute.app.firebase.HouseholdRepository.markCollected(
-                            home, profile.id, profile.name.substringBefore(" (").trim()
-                        ) { _, msg -> android.widget.Toast.makeText(appContext, msg, android.widget.Toast.LENGTH_SHORT).show() }
-                    },
                     onShowOnMap = {
                         mapTarget = null
                         showMapDialog = true

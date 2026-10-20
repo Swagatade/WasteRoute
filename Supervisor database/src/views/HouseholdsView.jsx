@@ -51,7 +51,14 @@ export default function HouseholdsView({ workers, households, loaded, loadError 
   const toggleArea = (worker, areaId) => {
     const current = worker.assignedAreaIds || [];
     const next = current.includes(areaId) ? current.filter((x) => x !== areaId) : [...current, areaId];
-    return run(() => setWorkerAreas(worker.id, next), `${worker.name}: ${next.length} zone(s) assigned.`);
+    // A zone belongs to one worker at a time: assigning it here takes it away from anyone else.
+    const takeFrom = current.includes(areaId)
+      ? []
+      : workers.filter((w) => w.id !== worker.id && (w.assignedAreaIds || []).includes(areaId));
+    return run(async () => {
+      await setWorkerAreas(worker.id, next);
+      await Promise.all(takeFrom.map((w) => setWorkerAreas(w.id, (w.assignedAreaIds || []).filter((x) => x !== areaId))));
+    }, `${worker.name}: ${next.length} zone(s) assigned.`);
   };
 
   const doneTotal = households.filter(isDone).length;

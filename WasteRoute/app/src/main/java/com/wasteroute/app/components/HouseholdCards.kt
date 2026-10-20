@@ -52,7 +52,6 @@ fun AssignedHomesCard(
     homes: List<LiveHousehold>,
     areaLabel: String,
     hasAssignedArea: Boolean,
-    onMarkCollected: (LiveHousehold) -> Unit,
     onShowOnMap: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -133,14 +132,14 @@ fun AssignedHomesCard(
                             .background(Emerald400)
                     )
                 }
-                homes.forEach { h -> HomeRow(h, onMarkCollected) }
+                homes.forEach { h -> HomeRow(h) }
             }
         }
     }
 }
 
 @Composable
-private fun HomeRow(h: LiveHousehold, onMarkCollected: (LiveHousehold) -> Unit) {
+private fun HomeRow(h: LiveHousehold) {
     val isDark = isSystemInDarkTheme()
     val collected = h.collectedToday()
     Row(
@@ -179,12 +178,8 @@ private fun HomeRow(h: LiveHousehold, onMarkCollected: (LiveHousehold) -> Unit) 
         if (collected) {
             Text("Collected", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = Emerald400)
         } else {
-            Button(
-                onClick = { onMarkCollected(h) },
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Emerald400, contentColor = Color(0xFF052E16)),
-                contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 10.dp, vertical = 4.dp)
-            ) { Text("Collected", fontSize = 11.5.sp, fontWeight = FontWeight.ExtraBold) }
+            // Only the warden's QR scan marks a building collected; workers cannot tick it themselves.
+            Text("Waiting for warden scan", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = Amber)
         }
     }
 }
